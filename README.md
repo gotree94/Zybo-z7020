@@ -199,13 +199,13 @@ AMD/Xilinx 웹사이트에서 다운로드해야 합니다:
 cd ~/Downloads
 
 # 실행 권한 부여
-chmod +x petalinux-v2022.1-final-installer.run
+chmod +x petalinux-v2022.2-10141622-installer.run
 
 # 설치 디렉토리 생성
-mkdir -p ~/petalinux/2022.1
+mkdir -p ~/petalinux/2022.2
 
 # PetaLinux 설치 (약 10-30분 소요, 프롬프트에서 엔터 입력)
-./petalinux-v2022.1-final-installer.run -d ~/petalinux/2022.1
+./petalinux-v2022.2-10141622-installer.run -d ~/petalinux/2022.1
 ```
 
 설치 중 라이센스 동의를 요구하면:
@@ -217,7 +217,7 @@ mkdir -p ~/petalinux/2022.1
 # bashrc에 추가
 echo '' >> ~/.bashrc
 echo '# PetaLinux Settings' >> ~/.bashrc
-echo 'source ~/petalinux/2022.1/settings.sh' >> ~/.bashrc
+echo 'source ~/petalinux/2022.2/settings.sh' >> ~/.bashrc
 
 # 현재 세션에 적용
 source ~/.bashrc
