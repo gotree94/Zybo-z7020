@@ -201,7 +201,7 @@ Subsystem AUTO Hardware Settings --->
 
 ## 5. QSPI Flash 설정
 ### 5.1 QSPI Flash 정보
-**Zybo Z7-20 QSPI Spec:
+**Zybo Z7-20 QSPI Spec:**
 ```
 Flash IC: Spansion S25FL128S
 용량: 16MB (128Mbit)
@@ -225,7 +225,7 @@ cd ~/projects/myproject_qspi/project-spec/meta-user/recipes-bsp/device-tree/file
 vi system-user.dtsi
 ```
 
-QSPI Device Tree 추가:
+**QSPI Device Tree 추가:**
 ```dts
 /include/ "system-conf.dtsi"
 / {
@@ -312,7 +312,7 @@ petalinux-build
 빌드 시간:
 * 첫 빌드: 1-3시간
 * 증분 빌드: 10-30분
-빌드 성공 확인:
+**빌드 성공 확인:**
 ```bash
 ls -lh images/linux/
 
@@ -335,7 +335,7 @@ petalinux-package --boot \
     --flash-intf qspi-x1-single \
     --force
 ```
-생성 파일:
+**생성 파일:**
 * images/linux/BOOT.BIN (QSPI 부팅용)
 * images/linux/boot.bin (백업)
 
@@ -392,29 +392,31 @@ sync
 
 ## 9. QSPI Flash 프로그래밍
 ### 9.1 필요한 도구
-Vivado 필요:
+**Vivado 필요:**
 * Vivado 2022.2
 * Hardware Manager
 * JTAG 케이블 (Digilent HS2 또는 Platform Cable USB II)
 
 ### 9.2 방법 1: Vivado Hardware Manager 사용 (권장)
-단계:
+**단계:**
 1. Zybo Z7-20 연결
    - JTAG 케이블을 PC와 Zybo J13 포트에 연결
    - 전원 ON (SW0)
    - JP5: JTAG 모드 (모든 핀 열림)
+
 2. Vivado 실행
 ```tcl
    vivado &
 ```
 
-Hardware Manager 열기
-
+3. Hardware Manager 열기
+```
    Flow Navigator → PROGRAM AND DEBUG → Open Hardware Manager
    Open Target → Auto Connect
+```
 
-QSPI Flash 프로그래밍
-
+4. QSPI Flash 프로그래밍
+```
    - 연결된 디바이스 선택 (xc7z020_1)
    - 우클릭 → Add Configuration Memory Device
    - Search: s25fl128sxxxxxx0 선택
@@ -427,14 +429,19 @@ QSPI Flash 프로그래밍
    [✓] Verify
    
    OK 클릭
+```
 
-프로그래밍 대기 (약 5-10분)
-완료 확인
-
+## 5. 프로그래밍 대기 (약 5-10분)
+## 6. 완료 확인
+```
    Flash programming completed successfully
-9.3 방법 2: XSCT 스크립트 사용
-program_qspi.tcl 생성:
-tcl# QSPI Flash 프로그래밍 스크립트
+```
+
+### 9.3 방법 2: XSCT 스크립트 사용
+**program_qspi.tcl 생성:**
+
+```tcl
+# QSPI Flash 프로그래밍 스크립트
 connect
 
 # 타겟 선택
@@ -459,12 +466,18 @@ flash -f ~/projects/myproject_qspi/images/linux/qspi_flash_image.bin \
 
 puts "QSPI Flash programming completed!"
 exit
-실행:
-bashcd ~/projects/myproject_qspi/images/linux/
+```
+
+**실행:**
+```bash
+cd ~/projects/myproject_qspi/images/linux/
 xsct program_qspi.tcl
-9.4 방법 3: U-Boot에서 프로그래밍 (업데이트용)
-TFTP 서버 설정 필요
-bash# U-Boot 콘솔에서
+```
+
+### 9.4 방법 3: U-Boot에서 프로그래밍 (업데이트용)
+**TFTP 서버 설정 필요**
+```bash
+# U-Boot 콘솔에서
 ZynqMP> setenv ipaddr 192.168.1.100
 ZynqMP> setenv serverip 192.168.1.1
 ZynqMP> ping ${serverip}
@@ -482,24 +495,27 @@ ZynqMP> sf write 0x2000000 0 ${filesize}
 # 검증
 ZynqMP> sf read 0x3000000 0 ${filesize}
 ZynqMP> cmp.b 0x2000000 0x3000000 ${filesize}
+```
 
-10. Zybo Z7-20 QSPI 부팅
-10.1 하드웨어 설정
+## 10. Zybo Z7-20 QSPI 부팅
+### 10.1 하드웨어 설정
 ⭐ 부트 점퍼 (JP5) - QSPI 모드:
+```
 QSPI 부팅:
 JP5: [  ] [  ]
      [  ] [QS]
      
 또는 모든 핀 제거 (기본값이 QSPI)
-연결:
+```
+**연결:**
+1. JTAG 케이블 제거 (선택)
+2. USB-UART 케이블 연결 (J14)
+3. 이더넷 연결 (선택)
+4. 전원 OFF
 
-JTAG 케이블 제거 (선택)
-USB-UART 케이블 연결 (J14)
-이더넷 연결 (선택)
-전원 OFF
-
-10.2 시리얼 콘솔 설정
-PuTTY 설정:
+### 10.2 시리얼 콘솔 설정
+**PuTTY 설정:**
+```
 Connection type: Serial
 Serial line: COM3 (장치 관리자에서 확인)
 Speed: 115200
@@ -510,12 +526,13 @@ Connection → Serial:
   Stop bits: 1
   Parity: None
   Flow control: None
+```
+
 10.3 QSPI 부팅
-
-PuTTY 연결
-전원 ON (SW0)
-부팅 메시지 확인
-
+1. PuTTY 연결
+2. 전원 ON (SW0)
+3. 부팅 메시지 확인
+```
 Xilinx Zynq First Stage Boot Loader
 Release 2022.2
 Devcfg driver initialized
@@ -540,16 +557,25 @@ Starting kernel ...
 [    0.500000] Unpacking initramfs...
 
 PetaLinux 2022.2 myproject_qspi /dev/ttyPS0
-10.4 로그인
-자동 로그인:
+```
+
+### 10.4 로그인
+**자동 로그인:**
+```
 myproject_qspi login: root (automatic login)
 root@myproject_qspi:~#
-수동 로그인:
+```
+
+**수동 로그인:**
+```
 myproject_qspi login: root
 Password: (그냥 Enter)
 root@myproject_qspi:~#
-10.5 QSPI 부팅 확인
-bash# QSPI Flash 확인
+```
+
+### 10.5 QSPI 부팅 확인
+```bash
+# QSPI Flash 확인
 cat /proc/mtd
 
 # 출력 예:
@@ -565,39 +591,47 @@ cat /sys/class/mtd/mtd0/size
 # INITRAMFS 확인 (rootfs가 메모리에 있음)
 mount | grep rootfs
 df -h
+```
 
-11. 트러블슈팅
-11.1 QSPI 프로그래밍 실패
-증상:
+## 11. 트러블슈팅
+### 11.1 QSPI 프로그래밍 실패
+**증상:**
+```
 Flash operation failed
 Device not found
-해결:
-
-JTAG 연결 확인
-
+```
+**해결:**
+1. JTAG 연결 확인
+```
    - JTAG 케이블 재연결
    - Vivado Hardware Manager에서 디바이스 재검색
    - 드라이버 확인 (Digilent Adept)
-
-올바른 Flash 선택
-
+```
+2.올바른 Flash 선택
+```
    Vivado → Add Configuration Memory Device
    → Search: "s25fl128" 
    → s25fl128sxxxxxx0-spi-x1_x2_x4 선택
-
-수동 Flash ID 확인
-
-tcl   # XSCT에서
+```
+3.수동 Flash ID 확인
+```tcl
+   # XSCT에서
    connect
    targets -set -filter {name =~ "ARM*#0"}
    mrd -bin -file flash_test.bin 0xE000D030 4
-11.2 QSPI 부팅 실패
-증상 1: U-Boot에서 멈춤
+```
+
+### 11.2 QSPI 부팅 실패
+**증상 1: U-Boot에서 멈춤**
+```
 U-Boot 2022.01
 ...
 SF: Failed to initialize SPI flash
-해결:
-bash# Device Tree 확인
+```
+
+**해결:**
+111bash
+# Device Tree 확인
 cd ~/projects/myproject_qspi/project-spec/meta-user/recipes-bsp/device-tree/files/
 vi system-user.dtsi
 
@@ -605,9 +639,15 @@ vi system-user.dtsi
 # 재빌드
 petalinux-build -c device-tree -x cleansstate
 petalinux-build
-증상 2: Kernel panic - INITRAMFS
+```
+
+**증상 2: Kernel panic - INITRAMFS**
+```
 Kernel panic - not syncing: VFS: Unable to mount root fs on unknown-block(0,0)
-해결:
+```
+
+**해결:**
+```
 bash# INITRAMFS 설정 확인
 petalinux-config
 
@@ -618,11 +658,17 @@ petalinux-config
 # 재빌드
 petalinux-build -c rootfs -x cleansstate
 petalinux-build
-증상 3: Flash 읽기 오류
+```
+
+**증상 3: Flash 읽기 오류**
+```
 sf probe 0
 SF: Failed to initialize SPI flash at 0:0
-해결:
-bash# U-Boot 설정 확인
+```
+
+**해결:**
+```bash
+# U-Boot 설정 확인
 petalinux-config -c u-boot
 
 # Device Drivers --->
@@ -634,10 +680,15 @@ petalinux-config -c u-boot
 # 재빌드
 petalinux-build -c u-boot -x cleansstate
 petalinux-build
-11.3 INITRAMFS 용량 초과
-증상:
+```
+
+### 11.3 INITRAMFS 용량 초과
+**증상:**
+```
 ERROR: rootfs image size exceeded
-해결:
+```
+**해결:**
+```
 bash# 불필요한 패키지 제거
 petalinux-config -c rootfs
 
@@ -652,64 +703,62 @@ vi project-spec/meta-user/conf/petalinuxbsp.conf
 # 추가:
 # IMAGE_FSTYPES = "cpio.gz.u-boot"
 # INITRAMFS_MAXSIZE = "10240"
-11.4 QSPI Flash 성능 저하
-문제:
+```
 
-부팅 시간 느림
-읽기/쓰기 속도 저하
-
-최적화:
-dts# system-user.dtsi에서 SPI 속도 증가
+### 11.4 QSPI Flash 성능 저하
+**문제:**
+  * 부팅 시간 느림
+  * 읽기/쓰기 속도 저하
+**최적화:**
+```dts
+# system-user.dtsi에서 SPI 속도 증가
 &qspi {
     spi-max-frequency = <50000000>;  // 50MHz로 증가
     spi-tx-bus-width = <4>;          // Quad mode
     spi-rx-bus-width = <4>;
 };
-11.5 QSPI vs SD 카드 비교
+```
+
+### 11.5 QSPI vs SD 카드 비교
 항목QSPI FlashSD 카드용량16MB4GB+속도50MHz (빠름)25MHz (느림)RootfsINITRAMFS (RAM)EXT4 (SD)쓰기제한적 (Wear leveling)자유로움부팅 시간빠름 (~5초)보통 (~10초)용도임베디드, 읽기전용개발, 대용량업데이트JTAG 또는 네트워크카드 교체
 
-12. 체크리스트
-12.1 QSPI 부팅 전체 체크리스트
-설치 단계:
-
- VirtualBox + Ubuntu 22.04.5 설치
- 공유 폴더 설정
- 필수 패키지 설치
- PetaLinux 2022.2 설치
+## 12. 체크리스트
+### 12.1 QSPI 부팅 전체 체크리스트
+**설치 단계:**
+ - [] VirtualBox + Ubuntu 22.04.5 설치
+ - [] 공유 폴더 설정
+ - [] 필수 패키지 설치
+ - [] PetaLinux 2022.2 설치
 
 프로젝트 생성:
-
- XSA 파일 준비
- QSPI 프로젝트 생성
- Root filesystem: INITRAMFS 선택
- Flash: ps7_qspi_0 선택
- Device Tree QSPI 노드 추가
+ - [] XSA 파일 준비
+ - [] QSPI 프로젝트 생성
+ - [] Root filesystem: INITRAMFS 선택
+ - [] Flash: ps7_qspi_0 선택
+ - [] Device Tree QSPI 노드 추가
 
 빌드:
-
- Rootfs 로그인 설정 (debug-tweaks 등)
- 빌드 완료
- BOOT.BIN 생성 (--flash-size 16)
- QSPI 이미지 생성
+ - [] Rootfs 로그인 설정 (debug-tweaks 등)
+ - [] 빌드 완료
+ - [] BOOT.BIN 생성 (--flash-size 16)
+ - [] QSPI 이미지 생성
 
 프로그래밍:
-
- Vivado 2022.2 설치
- JTAG 케이블 연결
- QSPI Flash 프로그래밍 완료
- Verify 완료
+ - [] Vivado 2022.2 설치
+ - [] JTAG 케이블 연결
+ - [] QSPI Flash 프로그래밍 완료
+ - [] Verify 완료
 
 부팅:
+ - [] JP5: QSPI 모드 설정
+ - [] UART 연결 (115200 8N1)
+ - [] 부팅 성공
+ - [] Root 로그인 성공
+ - [] INITRAMFS 확인
 
- JP5: QSPI 모드 설정
- UART 연결 (115200 8N1)
- 부팅 성공
- Root 로그인 성공
- INITRAMFS 확인
 
-
-13. 자주 사용하는 명령어
-13.1 QSPI 관련 명령어
+## 13. 자주 사용하는 명령어
+### 13.1 QSPI 관련 명령어
 U-Boot:
 bash# QSPI Probe
 sf probe 0
