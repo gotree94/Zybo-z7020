@@ -6,7 +6,7 @@
 
 ## 목차
 
-1. [VirtualBox Ubuntu 22.04.5 설치](#1-VirtualBox Ubuntu 22.04.5 설치)
+1. [VirtualBox Ubuntu 22.04.5 설치](#1-VirtualBox-Ubuntu-22.04.5-설치)
 2. [Ubuntu 시스템 준비](#2-)
 3. [PetaLinux 2022.2 설치](#3-)
 4. [Zybo Z7-20 프로젝트 생성 (QSPI)](#4-)
