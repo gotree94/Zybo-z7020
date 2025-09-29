@@ -164,6 +164,24 @@ sudo locale-gen en_US.UTF-8
 sudo dpkg-reconfigure dash
 # "No" 선택
 ```
+   
+   * 2.3 TFTP 서버 설치 (선택사항)
+     
+```
+sudo apt install -y tftpd-hpa
+sudo systemctl enable tftpd-hpa
+sudo systemctl start tftpd-hpa
+```
+
+   * 2.4 Dash를 Bash로 변경
+
+```
+sudo dpkg-reconfigure dash
+# "No" 선택
+```
+
+
+
 
 
 
