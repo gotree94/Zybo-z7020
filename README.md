@@ -1,5 +1,47 @@
 # Zybo-z7020
 
+---
+# VirtualBox & Share folder setting
+
+## 1단계: 사용자를 vboxsf 그룹에 추가
+```
+sudo usermod -aG vboxsf gotree94
+```
+
+## 2단계: 로그아웃 후 재로그인
+GUI에서 로그아웃하거나
+터미널에서: logout 또는 exit
+또는 시스템 재부팅: sudo reboot
+
+## 3단계: 재로그인 후 확인
+```
+groups
+```
+
+   * 이제 출력에 vboxsf가 포함되어야 합니다.
+
+---
+
+   * 만약 위 방법이 안 되면, 공유 폴더가 제대로 마운트되었는지 확인해보세요:
+
+```
+bashmount | grep vboxsf
+```
+
+   * 출력이 없다면 Guest Additions 설치나 공유 폴더 설정에 문제가 있을 수 있습니다.
+   * Guest Additions 재설치:
+```
+sudo apt update
+sudo apt install virtualbox-guest-utils virtualbox-guest-x11 virtualbox-guest-dkms
+sudo reboot
+```
+
+   * 재부팅 후 VirtualBox 설정에서 공유 폴더가 올바르게 설정되어 있는지 확인하고, 다시 시도해보세요.
+
+---
+
+
+
 
 # Zybo Z7-20 PetaLinux 설치 완전 가이드
 
