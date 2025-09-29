@@ -1906,8 +1906,8 @@ Phase 12: 백업 및 문서화
 
 ---
 
-Happy Hacking with QSPI! 🛠️⚡
-May the Flash be with you! 💾
+**Happy Hacking with QSPI! 🛠️⚡
+**May the Flash be with you! 💾
 
 ---
 
@@ -1938,8 +1938,8 @@ May the Flash be with you! 💾
 
 ---
 
-이 가이드가 도움이 되었다면 다른 개발자들과 공유해주세요!
-질문이나 피드백은 언제든지 환영합니다.
+**이 가이드가 도움이 되었다면 다른 개발자들과 공유해주세요!
+**질문이나 피드백은 언제든지 환영합니다.
 
 ---
 
