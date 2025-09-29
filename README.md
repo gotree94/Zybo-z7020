@@ -41,8 +41,6 @@ sudo reboot
 ---
 
 
-
-
 # Zybo Z7-20 PetaLinux 설치 완전 가이드
 
 ## 개요
