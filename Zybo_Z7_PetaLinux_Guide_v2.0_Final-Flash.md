@@ -27,7 +27,7 @@
 
 ## 1. VirtualBox Ubuntu 22.04.5 설치
 ### 1.1 VirtualBox 가상머신 생성
-**시스템 사양
+**시스템 사양**
 ```
 이름: Zybo-PetaLinux-QSPI
 타입: Linux
