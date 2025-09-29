@@ -205,7 +205,7 @@ chmod +x petalinux-v2022.2-10141622-installer.run
 mkdir -p ~/petalinux/2022.2
 
 # PetaLinux 설치 (약 10-30분 소요, 프롬프트에서 엔터 입력)
-./petalinux-v2022.2-10141622-installer.run -d ~/petalinux/2022.1
+./petalinux-v2022.2-10141622-installer.run -d ~/petalinux/2022.2
 ```
 
 설치 중 라이센스 동의를 요구하면:
