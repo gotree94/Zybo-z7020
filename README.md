@@ -1,6 +1,22 @@
 # Zybo-z7020
 
 ---
+
+# Installation Requirements
+
+## The PetaLinux tools installation requirements are:
+
+   * Minimum workstation requirements:
+      * 8 GB RAM (recommended minimum for AMD tools)
+      * 2 GHz CPU clock or equivalent (minimum of eight cores)
+      * 100 GB free HDD space
+      * Supported OS:
+         * Completely removed CENTOS and RHEL to align with upstream Yocto.
+         * Ubuntu Desktop/Server 22.04.2 LTS,22.04.3 LTS, 22.04.4 LTS and 22.04.5 LTS
+         * OpenSuse Leap 15.4
+         * AlmaLinux 8.10,9.4 and 9.5
+
+---
 # VirtualBox & Share folder setting
 
 ## 1단계: 사용자를 vboxsf 그룹에 추가
