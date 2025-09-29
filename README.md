@@ -61,7 +61,37 @@ sudo reboot
 
 # 3. Zybo Z7-20 PetaLinux 설치 가이드 (VirtualBox Ubuntu)
 
-```
+## Ubuntu 22.04.5 및 PetaLinux 2022.2 설치 가이드
+### 1. VirtualBox에 Ubuntu 22.04.5 설치
+#### 1.1 VirtualBox 설정
+
+* 새 가상머신 생성
+  * 이름: PetaLinux-Ubuntu
+  * 타입: Linux
+  * 버전: Ubuntu (64-bit)
+
+* 리소스 할당
+  * 메모리: 최소 8GB (권장 16GB)
+  * CPU: 최소 4코어 (권장 8코어)
+  * 디스크: 최소 100GB (권장 200GB 이상)
+  * VT-x/AMD-V 가상화 활성화
+
+* 네트워크 설정
+  * NAT 또는 Bridge 모드 설정
+
+#### 1.2 Ubuntu 설치
+* ubuntu-22.04.5-desktop-amd64.iso 마운트
+* 일반 설치 진행
+* 사용자 계정 생성 (예: petalinux)
+
+### 2. Ubuntu 시스템 준비
+#### 2.1 시스템 업데이트
+
+   * 전체 통합 명령어
+```bash
+sudo apt update
+sudo apt upgrade -y
+
 # 시스템 업데이트
 sudo apt update
 sudo apt upgrade -y
