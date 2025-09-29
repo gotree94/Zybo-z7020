@@ -208,6 +208,40 @@ mkdir -p ~/petalinux/2022.2
 ./petalinux-v2022.2-10141622-installer.run -d ~/petalinux/2022.2
 ```
 
+```
+INFO: Checking installation environment requirements...
+WARNING: This is not a supported OS
+INFO: Checking free disk space
+INFO: Checking installed tools
+INFO: Checking installed development libraries
+INFO: Checking network and other services
+WARNING: No tftp server found - please refer to "UG1144  PetaLinux Tools Documentation Reference Guide" for its impact and solution
+INFO: Checking installer checksum...
+INFO: Extracting PetaLinux installer...
+
+LICENSE AGREEMENTS
+
+PetaLinux SDK contains software from a number of sources.  Please review
+the following licenses and indicate your acceptance of each to continue.
+
+You do not have to accept the licenses, however if you do not then you may 
+not use PetaLinux SDK.
+
+Use PgUp/PgDn to navigate the license viewer, and press 'q' to close
+
+Press Enter to display the license agreements
+Do you accept Xilinx End User License Agreement? [y/N] > y
+Do you accept Third Party End User License Agreement? [y/N] > y
+INFO: Installing PetaLinux...
+INFO: Checking PetaLinux installer integrity...
+INFO: Installing PetaLinux SDK to "/home/gotree94/petalinux/2022.2/."
+INFO: Installing buildtools in /home/gotree94/petalinux/2022.2/./components/yocto/buildtools
+INFO: Installing buildtools-extended in /home/gotree94/petalinux/2022.2/./components/yocto/buildtools_extended
+INFO: PetaLinux SDK has been installed to /home/gotree94/petalinux/2022.2/.
+gotree94@gotree94-VirtualBox:~/Downloads$ 
+
+```
+
 설치 중 라이센스 동의를 요구하면:
 - **q**를 눌러 라이센스 끝으로 이동
 - **y**를 입력하여 동의
