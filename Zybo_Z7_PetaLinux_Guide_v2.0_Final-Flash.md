@@ -1702,9 +1702,11 @@ SN003,/path/to/qspi_v1.0.bin
 실행:
 bashchmod +x production_program.sh
 ./production_program.sh batch.csv
+
 G. QSPI 유지보수
 정기 점검 항목:
-bash#!/bin/bash
+```bash
+#!/bin/bash
 # qspi_health_check.sh
 
 echo "QSPI Flash 헬스 체크"
@@ -1741,73 +1743,68 @@ fi
 
 echo "===================="
 echo "헬스 체크 완료"
+```
 
-최종 체크리스트 (인쇄용)
+### 최종 체크리스트 (인쇄용)
 ☑️ QSPI 부팅 마스터 체크리스트
+
 Phase 1: 환경 준비
 
- VirtualBox 7.0+ 설치
- Ubuntu 22.04.5 LTS 설치 (200GB+, 16GB RAM+)
- Guest Additions 설치
- 공유 폴더 설정 (/mnt/share)
- 필수 패키지 설치 완료
+ - [ ] VirtualBox 7.0+ 설치
+ - [ ] Ubuntu 22.04.5 LTS 설치 (200GB+, 16GB RAM+)
+ - [ ] Guest Additions 설치
+ - [ ] 공유 폴더 설정 (/mnt/share)
+ - [ ] 필수 패키지 설치 완료
 
 Phase 2: PetaLinux 설치
 
- PetaLinux 2022.2 인스톨러 다운로드
- ~/petalinux/2022.2 에 설치
- settings.sh 실행 확인
- PETALINUX 환경 변수 확인
+ - [ ] PetaLinux 2022.2 인스톨러 다운로드
+ - [ ] ~/petalinux/2022.2 에 설치
+ - [ ] settings.sh 실행 확인
+ - [ ] PETALINUX 환경 변수 확인
 
 Phase 3: 프로젝트 생성
 
- XSA 파일 준비
- petalinux-create로 프로젝트 생성
- --get-hw-description로 하드웨어 임포트
+ - [ ] XSA 파일 준비
+ - [ ] petalinux-create로 프로젝트 생성
+ - [ ] --get-hw-description로 하드웨어 임포트
 
 Phase 4: QSPI 설정 ⭐
 
- petalinux-config에서:
-
- Root filesystem → INITRAMFS
- Flash → ps7_qspi_0
- UART → ps7_uart_1
- Ethernet → ps7_ethernet_0
-
-
- system-user.dtsi에 QSPI 노드 추가
- 파티션 레이아웃 정의 (boot, kernel, rootfs)
+ - [ ] petalinux-config에서:
+ - [ ] Root filesystem → INITRAMFS
+ - [ ] Flash → ps7_qspi_0
+ - [ ] UART → ps7_uart_1
+ - [ ] Ethernet → ps7_ethernet_0
+ - [ ] system-user.dtsi에 QSPI 노드 추가
+ - [ ] 파티션 레이아웃 정의 (boot, kernel, rootfs)
 
 Phase 5: Rootfs 설정
 
- petalinux-config -c rootfs에서:
-
- debug-tweaks 활성화
- allow-empty-password 활성화
- allow-root-login 활성화
- empty-root-password 활성화
- serial-autologin-root 활성화
-
-
- 불필요한 패키지 제거 (용량 최적화)
- busybox 확인
+ - [ ] petalinux-config -c rootfs에서:
+ - [ ] debug-tweaks 활성화
+ - [ ] allow-empty-password 활성화
+ - [ ] allow-root-login 활성화
+ - [ ] empty-root-password 활성화
+ - [ ] serial-autologin-root 활성화
+ - [ ] 불필요한 패키지 제거 (용량 최적화)
+ - [ ] busybox 확인
 
 Phase 6: 빌드
 
- petalinux-build 실행 (1-3시간)
- 빌드 성공 확인
- Warning 메시지 검토 (무시 가능)
+ - [ ] petalinux-build 실행 (1-3시간)
+ - [ ] 빌드 성공 확인
+ - [ ] Warning 메시지 검토 (무시 가능)
 
 Phase 7: QSPI 이미지 생성
 
- petalinux-package --boot 실행
-
- --fsbl 옵션
- --fpga 옵션
- --u-boot 옵션
- --kernel 옵션 (QSPI 전용!)
- --flash-size 16 옵션
- --flash-intf qspi-x1-single 옵션
+ - [ ] petalinux-package --boot 실행
+ - [ ] --fsbl 옵션
+ - [ ] --fpga 옵션
+ - [ ] --u-boot 옵션
+ - [ ] --kernel 옵션 (QSPI 전용!)
+ - [ ] --flash-size 16 옵션
+ - [ ] --flash-intf qspi-x1-single 옵션
 
 
  qspi_flash_image.bin 생성 확인
@@ -1815,66 +1812,63 @@ Phase 7: QSPI 이미지 생성
 
 Phase 8: Flash 프로그래밍
 
- Vivado 2022.2 실행
- JTAG 케이블 연결 (J13)
- Zybo 전원 ON
- Hardware Manager → Open Target
- Add Configuration Memory Device
-
- s25fl128sxxxxxx0 선택
-
-
- qspi_flash_image.bin 선택
- Erase, Program, Verify 모두 체크
- 프로그래밍 실행 (5-10분)
- "Flash programming completed" 확인
+ - [ ] Vivado 2022.2 실행
+ - [ ] JTAG 케이블 연결 (J13)
+ - [ ] Zybo 전원 ON
+ - [ ] Hardware Manager → Open Target
+ - [ ] Add Configuration Memory Device
+ - [ ] s25fl128sxxxxxx0 선택
+ - [ ] qspi_flash_image.bin 선택
+ - [ ] Erase, Program, Verify 모두 체크
+ - [ ] 프로그래밍 실행 (5-10분)
+ - [ ] "Flash programming completed" 확인
 
 Phase 9: 하드웨어 설정
 
- JTAG 케이블 제거
- JP5 점퍼를 QSPI 모드로 설정
-
- 하단 2핀만 (QS 표시)
- 또는 모든 핀 제거
-
-
- USB-UART 케이블 연결 (J14)
- 이더넷 연결 (선택)
+ - [ ] JTAG 케이블 제거
+ - [ ] JP5 점퍼를 QSPI 모드로 설정
+ - [ ] 하단 2핀만 (QS 표시)
+ - [ ] 또는 모든 핀 제거
+ - [ ] USB-UART 케이블 연결 (J14)
+ - [ ] 이더넷 연결 (선택)
 
 Phase 10: 부팅 및 검증
 
- PuTTY 실행 (115200 8N1)
- COM 포트 확인 및 연결
- Zybo 전원 ON (SW0)
- "Boot mode is QSPI" 확인
- U-Boot 메시지 확인
- Kernel 부팅 메시지 확인
- "Unpacking initramfs" 확인
- Root 로그인 성공
- cat /proc/mtd 실행
- mount | grep rootfs 확인
- df -h 확인 (tmpfs)
+ - [ ] PuTTY 실행 (115200 8N1)
+ - [ ] COM 포트 확인 및 연결
+ - [ ] Zybo 전원 ON (SW0)
+ - [ ] "Boot mode is QSPI" 확인
+ - [ ] U-Boot 메시지 확인
+ - [ ] Kernel 부팅 메시지 확인
+ - [ ] "Unpacking initramfs" 확인
+ - [ ] Root 로그인 성공
+ - [ ] cat /proc/mtd 실행
+ - [ ] mount | grep rootfs 확인
+ - [ ] df -h 확인 (tmpfs)
 
 Phase 11: 기능 테스트
 
- 네트워크 연결 (eth0)
- DHCP 또는 수동 IP 설정
- ping 테스트
- GPIO 테스트 (선택)
- 재부팅 테스트
- 부팅 시간 측정
+ - [ ] 네트워크 연결 (eth0)
+ - [ ] DHCP 또는 수동 IP 설정
+ - [ ] ping 테스트
+ - [ ] GPIO 테스트 (선택)
+ - [ ] 재부팅 테스트
+ - [ ] 부팅 시간 측정
 
 Phase 12: 백업 및 문서화
 
- QSPI 이미지 백업 (여러 복사본)
- 프로젝트 전체 백업
- 설정 파일 문서화
- 빌드 로그 저장
- 버전 정보 기록
+ - [ ] QSPI 이미지 백업 (여러 복사본)
+ - [ ] 프로젝트 전체 백업
+ - [ ] 설정 파일 문서화
+ - [ ] 빌드 로그 저장
+ - [ ] 버전 정보 기록
 
+---
 
 Happy Hacking with QSPI! 🛠️⚡
 May the Flash be with you! 💾
+
+---
 
 ### 문서 정보
 * 제목: Digilent Zybo Z7-20 PetaLinux 완벽 가이드 (Quad-SPI Flash 버전)
