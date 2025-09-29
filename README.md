@@ -276,13 +276,13 @@ echo $PETALINUX
 **명령어를 찾을 수 없는 경우:**
 ```bash
 # 수동으로 환경변수 로드
-source ~/petalinux/2022.1/settings.sh
+source ~/petalinux/2022.2/settings.sh
 
 # settings.sh 파일 존재 확인
-ls -la ~/petalinux/2022.1/settings.sh
+ls -la ~/petalinux/2022.2/settings.sh
 
 # 설치 디렉토리 내용 확인
-ls -la ~/petalinux/2022.1/
+ls -la ~/petalinux/2022.2/
 ```
 
 ---
