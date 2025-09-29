@@ -1495,14 +1495,19 @@ dts&qspi {
 };
 성능 비교:
 모드속도데이터선대역폭Single50MHz1~6 MB/sDual50MHz2~12 MB/sQuad50MHz4~24 MB/sQuad Fast100MHz4~48 MB/s
+
 B. A/B 파티션 시스템
 이중 이미지 레이아웃:
+```
 0x00000000 - 0x000FFFFF : BOOT.BIN (1MB)
 0x00100000 - 0x005FFFFF : Kernel A (5MB)
 0x00600000 - 0x009FFFFF : RootFS A (4MB)
 0x00A00000 - 0x00EFFFFF : Kernel B (5MB)
 0x00F00000 - 0x00FFFFFF : RootFS B (1MB)
+```
+
 Device Tree:
+```
 dts&qspi {
     flash@0 {
         partition@0 {
@@ -1531,8 +1536,12 @@ dts&qspi {
         };
     };
 };
+```
+
 업데이트 로직 (pseudo-code):
-bash#!/bin/bash
+
+```bash
+#!/bin/bash
 # OTA 업데이트 스크립트
 
 CURRENT_SLOT=$(fw_printenv boot_slot | cut -d= -f2)
@@ -1556,8 +1565,11 @@ if verify_images; then
 else
     echo "Update failed! Keeping current slot."
 fi
+```
+
 C. QSPI 암호화 부팅
 Secure Boot 개요:
+```
 1. BootROM (하드웨어)
    ↓ [검증]
 2. FSBL (암호화)
@@ -1567,7 +1579,10 @@ Secure Boot 개요:
 4. Linux Kernel (암호화)
    ↓ [복호화 + 검증]
 5. RootFS (암호화)
+```
+
 Vivado에서 암호화 설정:
+```
 tcl# bootgen 명령어
 bootgen -image boot.bif -arch zynq -o BOOT_encrypted.BIN -encrypt efuse
 
@@ -1578,13 +1593,19 @@ the_ROM_image:
     [encryption=aes, aeskeyfile=key.nky]design_1_wrapper.bit
     [encryption=aes, aeskeyfile=key.nky]u-boot.elf
 }
+```
+
 D. QSPI 성능 최적화
 1. U-Boot 최적화:
+```
 c// include/configs/zynq-common.h
 #define CONFIG_SF_DEFAULT_SPEED    50000000  // 50MHz
 #define CONFIG_SYS_BOOTM_LEN       0x1000000 // 16MB
 #define CONFIG_SYS_LOAD_ADDR       0x2000000
+```
+
 2. Kernel 최적화:
+```
 bash# Kernel config
 petalinux-config -c kernel
 
@@ -1596,15 +1617,21 @@ petalinux-config -c kernel
 # Device Drivers --->
 #     SPI support --->
 #         <*> Cadence Quad SPI controller
+```
+
 3. 부팅 시간 최적화:
-bash# bootargs 최적화 (U-Boot)
+```bash
+# bootargs 최적화 (U-Boot)
 setenv bootargs 'console=ttyPS0,115200 root=/dev/ram rw earlyprintk quiet lpj=loops_per_jiffy'
 
 # systemd 최적화
 systemctl mask systemd-udev-settle.service
 systemctl mask systemd-networkd-wait-online.service
+```
+
 E. QSPI 문제 진단 가이드
 진단 플로우차트:
+```
 부팅 실패?
     ├─ No → 정상 동작
     └─ Yes
@@ -1622,8 +1649,11 @@ E. QSPI 문제 진단 가이드
         │           ├─ INITRAMFS 확인
         │           ├─ Device Tree 확인
         │           └─ rootfs 마운트 실패
+```        
+
 단계별 진단:
-bash# 1단계: U-Boot 레벨
+```bash
+# 1단계: U-Boot 레벨
 ZynqMP> sf probe 0
 SF: Detected s25fl128s with page size 256 Bytes
 
@@ -1643,10 +1673,14 @@ dmesg | grep mtd
 cat /proc/mtd
 ls -l /dev/mtd*
 mtdinfo /dev/mtd0
+```
+
 F. QSPI 프로덕션 가이드
 양산 프로그래밍 자동화:
 production_program.sh:
-bash#!/bin/bash
+
+```bash
+#!/bin/bash
 
 BATCH_FILE=$1
 LOG_DIR="./production_logs"
@@ -1695,13 +1729,20 @@ echo "Batch programming completed"
 echo "Success: $(wc -l < $LOG_DIR/success.log)"
 echo "Failed: $(wc -l < $LOG_DIR/failed.log)"
 echo "=========================================="
+```
+
 batch.csv 예:
+```
 SN001,/path/to/qspi_v1.0.bin
 SN002,/path/to/qspi_v1.0.bin
 SN003,/path/to/qspi_v1.0.bin
+```
+
 실행:
-bashchmod +x production_program.sh
+```bash
+chmod +x production_program.sh
 ./production_program.sh batch.csv
+```
 
 G. QSPI 유지보수
 정기 점검 항목:
