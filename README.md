@@ -2,7 +2,9 @@
 
 ---
 
-# Installation Requirements
+https://docs.amd.com/r/en-US/ug1144-petalinux-tools-reference-guide/Navigating-Content-by-Design-Process
+
+# 1. Installation Requirements
 
 ## The PetaLinux tools installation requirements are:
 
@@ -17,7 +19,7 @@
          * AlmaLinux 8.10,9.4 and 9.5
 
 ---
-# VirtualBox & Share folder setting
+# 2. VirtualBox & Share folder setting
 
 ## 1단계: 사용자를 vboxsf 그룹에 추가
 ```
@@ -56,7 +58,7 @@ sudo reboot
 
 ---
 
-# Zybo Z7-20 PetaLinux 설치 가이드 (VirtualBox Ubuntu)
+# 3. Zybo Z7-20 PetaLinux 설치 가이드 (VirtualBox Ubuntu)
 
 ## 개요
 VirtualBox에 설치된 Ubuntu 22.04에서 Digilent Zybo Z7-20 보드용 PetaLinux를 빌드하고 SD 카드 이미지를 생성하는 전체 과정입니다.
