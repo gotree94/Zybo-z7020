@@ -307,7 +307,7 @@ Vivado에서 생성한 design_1_wrapper.xsa 파일을 프로젝트로 복사합�
 **공유 폴더를 통한 방법:**
 ```bash
 # Windows에서 xsa 파일을 공유 폴더에 복사 후
-cp /media/sf_shared/design_1_wrapper.xsa ~/petalinux_projects/zybo_z7_20_project/
+cp /media/share/design_1_wrapper.xsa ~/petalinux_projects/zybo_z7_20_project/
 cd ~/petalinux_projects/zybo_z7_20_project
 ```
 
