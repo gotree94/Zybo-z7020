@@ -2,7 +2,8 @@
 
 ---
 
-https://docs.amd.com/r/en-US/ug1144-petalinux-tools-reference-guide/Navigating-Content-by-Design-Process
+* PetaLinux Tools Documentation: Reference Guide (UG1144) - AMD
+   * https://docs.amd.com/r/en-US/ug1144-petalinux-tools-reference-guide/Navigating-Content-by-Design-Process
 
 # 1. Installation Requirements
 
