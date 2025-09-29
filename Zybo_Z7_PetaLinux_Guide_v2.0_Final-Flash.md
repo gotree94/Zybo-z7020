@@ -6,22 +6,22 @@
 
 ## 목차
 
-1. VirtualBox Ubuntu 22.04.5 설치
-2. Ubuntu 시스템 준비
-3. PetaLinux 2022.2 설치
-4. Zybo Z7-20 프로젝트 생성 (QSPI)
-5. QSPI Flash 설정
-6. Root 로그인 설정
-7. PetaLinux 빌드
-8. QSPI Flash 이미지 생성
-9. QSPI Flash 프로그래밍
-10. Zybo Z7-20 QSPI 부팅
-11. 트러블슈팅
-12. 체크리스트
-13. 자주 사용하는 명령어
-14. FAQ
-15. 참고 자료
-16. 부록
+1. [VirtualBox Ubuntu 22.04.5 설치](#1-VirtualBox Ubuntu 22.04.5 설치)
+2. [Ubuntu 시스템 준비](#2-)
+3. [PetaLinux 2022.2 설치](#3-)
+4. [Zybo Z7-20 프로젝트 생성 (QSPI)](#4-)
+5. [QSPI Flash 설정](#5-)
+6. [Root 로그인 설정](#6-)
+7. [PetaLinux 빌드](#7-)
+8. [QSPI Flash 이미지 생성](#8-)
+9. [QSPI Flash 프로그래밍](#9-)
+10. [Zybo Z7-20 QSPI 부팅](#10-)
+11. [트러블슈팅](#11-)
+12. [체크리스트](#12-)
+13. [자주 사용하는 명령어](#13-)
+14. [FAQ](#14-)
+15. [참고 자료](#15-)
+16. [부록](#16-)
 
 ---
 
