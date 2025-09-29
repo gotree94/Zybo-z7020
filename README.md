@@ -40,18 +40,53 @@ sudo reboot
 
 ---
 
-
-# Zybo Z7-20 PetaLinux 설치 완전 가이드
+# Zybo Z7-20 PetaLinux 설치 가이드 (VirtualBox Ubuntu)
 
 ## 개요
-Digilent Zybo Z7-20 보드에 PetaLinux를 설치하여 GPIO 4버튼을 사용할 수 있도록 하는 전체 과정을 다룹니다.
+VirtualBox에 설치된 Ubuntu 22.04에서 Digilent Zybo Z7-20 보드용 PetaLinux를 빌드하고 SD 카드 이미지를 생성하는 전체 과정입니다.
 
-## 사전 요구사항
-- Vivado 2022.1 이상
-- PetaLinux Tools 2022.1 이상
-- Ubuntu 22.04 (WSL2 또는 네이티브)
-- 최소 100GB의 저장공간
-- 16GB 이상의 RAM 권장
+## VirtualBox 환경 사전 요구사항
+- **디스크 공간**: 최소 150GB 이상 (200GB 권장)
+- **메모리(RAM)**: 최소 8GB, 16GB 이상 강력 권장
+- **CPU 코어**: 4코어 이상 할당 권장
+- **네트워크**: 인터넷 연결 필수
+- **Guest Additions**: 설치 권장 (파일 공유용)
+
+---
+
+## VirtualBox 설정
+
+### 디스크 공간 확인
+```bash
+df -h
+# /home 파티션에 최소 100GB 이상의 여유 공간 확인
+```
+
+### VirtualBox Guest Additions 설치 (선택사항)
+SD 카드 이미지를 호스트 Windows로 쉽게 전송하기 위해 설치합니다.
+```bash
+sudo apt update
+sudo apt install -y virtualbox-guest-utils virtualbox-guest-x11
+```
+
+### 공유 폴더 설정 (VirtualBox)
+1. VirtualBox 메뉴: **장치** → **공유 폴더** → **공유 폴더 설정**
+2. **추가** 버튼 클릭
+3. **폴더 경로**: Windows의 공유할 폴더 선택 (예: `C:\SharedVM`)
+4. **폴더 이름**: `shared` (원하는 이름)
+5. **자동 마운트** 체크
+6. **영구적으로 만들기** 체크
+
+Ubuntu에서 마운트:
+```bash
+sudo mkdir -p /mnt/shared
+sudo mount -t vboxsf shared /mnt/shared
+# 또는 자동 마운트된 경로 사용: /media/sf_shared
+
+# 현재 사용자를 vboxsf 그룹에 추가 (권한 문제 해결)
+sudo usermod -aG vboxsf $USER
+# 로그아웃 후 재로그인 필요
+```
 
 ---
 
@@ -65,10 +100,12 @@ sudo apt install -y python3 python3-pip python3-venv
 sudo apt install -y gawk chrpath socat cpio python3-pexpect
 sudo apt install -y xz-utils debianutils iputils-ping python3-git
 sudo apt install -y python3-jinja2 libegl1-mesa libsdl1.2-dev
-sudo apt install -y pylint3 xterm rsync
+sudo apt install -y pylint3 xterm rsync vim net-tools
+sudo apt install -y gcc-multilib libc6-dev-i386 libncurses5-dev
+sudo apt install -y zlib1g:i386 libtool texinfo
 ```
 
-### 1.2 Bash 쉘 설정 (Ubuntu 22.04에서 dash 사용하는 경우)
+### 1.2 Bash 쉘 설정
 ```bash
 sudo dpkg-reconfigure dash
 # "No" 선택하여 bash를 기본 쉘로 설정
@@ -84,101 +121,89 @@ source ~/.bashrc
 
 ---
 
-## 2단계: PetaLinux Tools 설치 및 문제 해결
+## 2단계: PetaLinux Tools 설치
 
 ### 2.1 현재 상태 확인
-먼저 PetaLinux가 설치되어 있는지 확인합니다:
 ```bash
-# PetaLinux 명령어 확인
+# PetaLinux가 이미 설치되어 있는지 확인
 which petalinux-create
 echo $PETALINUX
 
 # 설치 경로 확인
-ls -la /opt/pkg/petalinux/ 2>/dev/null || echo "PetaLinux not found in /opt/pkg/petalinux/"
-ls -la ~/petalinux/ 2>/dev/null || echo "PetaLinux not found in ~/petalinux/"
+ls -la /opt/pkg/petalinux/ 2>/dev/null || echo "Not found in /opt/pkg/"
+ls -la ~/petalinux/ 2>/dev/null || echo "Not found in home directory"
 
-# 환경변수 확인
+# bashrc 확인
 grep -i petalinux ~/.bashrc
 ```
 
 ### 2.2 PetaLinux Tools 다운로드
-Xilinx 다운로드 페이지에서 PetaLinux Tools 설치 파일을 다운로드합니다.
+AMD/Xilinx 웹사이트에서 다운로드해야 합니다:
 
-**다운로드 방법:**
-1. https://www.xilinx.com/support/download/index.html/content/xilinx/en/downloadNav/embedded-design-tools.html 접속
-2. AMD 계정으로 로그인 (무료 계정 생성 가능)
-3. PetaLinux Tools 2022.1 (또는 최신 버전) 다운로드
-4. `petalinux-v2022.1-final-installer.run` 파일을 다운로드 폴더에 저장
+1. 웹브라우저에서 https://www.xilinx.com/support/download.html 접속
+2. **Embedded Design Tools** 선택
+3. AMD 계정으로 로그인 (무료 계정 생성 가능)
+4. **PetaLinux Tools** 선택
+5. 버전 선택 (예: 2022.1 또는 2022.2 권장)
+6. `petalinux-v2022.1-final-installer.run` 다운로드
+7. ~/Downloads 폴더에 저장
 
-### 2.3 PetaLinux 설치 (Option 1: 시스템 전역 설치)
+### 2.3 PetaLinux 설치 (홈 디렉토리 방식 권장)
 ```bash
 cd ~/Downloads
+
+# 실행 권한 부여
 chmod +x petalinux-v2022.1-final-installer.run
 
 # 설치 디렉토리 생성
-sudo mkdir -p /opt/pkg/petalinux/2022.1
-sudo chown $USER:$USER /opt/pkg/petalinux/2022.1
-
-# PetaLinux 설치 (약 10-30분 소요)
-./petalinux-v2022.1-final-installer.run -d /opt/pkg/petalinux/2022.1
-
-# 환경변수 설정
-echo 'source /opt/pkg/petalinux/2022.1/settings.sh' >> ~/.bashrc
-source ~/.bashrc
-```
-
-### 2.4 PetaLinux 설치 (Option 2: 홈 디렉토리 설치 - 권한 문제 시)
-```bash
-cd ~/Downloads
-chmod +x petalinux-v2022.1-final-installer.run
-
-# 홈 디렉토리에 설치
 mkdir -p ~/petalinux/2022.1
-./petalinux-v2022.1-final-installer.run -d ~/petalinux/2022.1
 
-# 환경변수 설정
+# PetaLinux 설치 (약 10-30분 소요, 프롬프트에서 엔터 입력)
+./petalinux-v2022.1-final-installer.run -d ~/petalinux/2022.1
+```
+
+설치 중 라이센스 동의를 요구하면:
+- **q**를 눌러 라이센스 끝으로 이동
+- **y**를 입력하여 동의
+
+### 2.4 환경변수 설정
+```bash
+# bashrc에 추가
+echo '' >> ~/.bashrc
+echo '# PetaLinux Settings' >> ~/.bashrc
 echo 'source ~/petalinux/2022.1/settings.sh' >> ~/.bashrc
+
+# 현재 세션에 적용
 source ~/.bashrc
 ```
 
-### 2.5 설치 후 확인
+### 2.5 설치 확인
 ```bash
-# 새 터미널을 열거나 bashrc 재로드
+# 새 터미널 열기 또는
 source ~/.bashrc
 
 # PetaLinux 명령어 확인
 which petalinux-create
 petalinux-create --help
-
-# 버전 확인
 echo $PETALINUX
+
+# 정상 출력 예시:
+# /home/gotree94/petalinux/2022.1/tools/common/petalinux/bin/petalinux-create
 ```
 
 ### 2.6 문제 해결
-만약 여전히 `petalinux-create: command not found` 오류가 발생하면:
 
-**A. 수동으로 환경변수 설정:**
+**명령어를 찾을 수 없는 경우:**
 ```bash
-# 설치 경로 확인 (Option 1이나 2 중 설치한 경로)
-ls -la /opt/pkg/petalinux/2022.1/settings.sh
-# 또는
+# 수동으로 환경변수 로드
+source ~/petalinux/2022.1/settings.sh
+
+# settings.sh 파일 존재 확인
 ls -la ~/petalinux/2022.1/settings.sh
 
-# 수동으로 환경변수 로드
-source /opt/pkg/petalinux/2022.1/settings.sh
-# 또는
-source ~/petalinux/2022.1/settings.sh
+# 설치 디렉토리 내용 확인
+ls -la ~/petalinux/2022.1/
 ```
-
-**B. 설치 파일 재확인:**
-```bash
-cd ~/Downloads
-ls -la petalinux*
-file petalinux-v2022.1-final-installer.run
-```
-
-**C. 터미널 재시작:**
-현재 터미널을 닫고 새 터미널을 열어 환경변수가 제대로 로드되는지 확인하세요.
 
 ---
 
@@ -198,8 +223,24 @@ cd zybo_z7_20_project
 
 ### 3.3 하드웨어 정의 파일 가져오기
 Vivado에서 생성한 design_1_wrapper.xsa 파일을 프로젝트로 복사합니다.
+
+**공유 폴더를 통한 방법:**
 ```bash
-# design_1_wrapper.xsa를 현재 디렉토리로 복사 후
+# Windows에서 xsa 파일을 공유 폴더에 복사 후
+cp /media/sf_shared/design_1_wrapper.xsa ~/petalinux_projects/zybo_z7_20_project/
+cd ~/petalinux_projects/zybo_z7_20_project
+```
+
+**또는 USB를 통한 방법:**
+VirtualBox 메뉴: **장치** → **USB** → USB 디바이스 선택
+```bash
+# USB가 자동 마운트되면
+cp /media/gotree94/USB드라이브이름/design_1_wrapper.xsa ~/petalinux_projects/zybo_z7_20_project/
+cd ~/petalinux_projects/zybo_z7_20_project
+```
+
+### 3.4 하드웨어 정의 가져오기 및 구성
+```bash
 petalinux-config --get-hw-description=./
 ```
 
@@ -208,49 +249,59 @@ petalinux-config --get-hw-description=./
 ## 4단계: PetaLinux 구성
 
 ### 4.1 시스템 구성
-위 명령어 실행 후 menuconfig가 열리면 다음 설정을 확인/변경합니다:
+위 명령어 실행 후 menuconfig가 열리면:
 
 **DTG Settings**
-- System Tree Information → bootargs
-  - `earlycon console=ttyPS0,115200 clk_ignore_unused root=/dev/mmcblk0p2 rw rootwait`
+- `Kernel Bootargs` 항목으로 이동
+- `generate boot args automatically` → **비활성화**
+- `User Set Kernel Bootargs` 입력:
+  ```
+  earlycon console=ttyPS0,115200 clk_ignore_unused root=/dev/mmcblk0p2 rw rootwait
+  ```
 
 **Image Packaging Configuration**
-- Root filesystem type → `EXT4 (SD/eMMC/SATA/USB)`
-- Device node of SD device → `/dev/mmcblk0p2`
+- `Root filesystem type` → **EXT4 (SD/eMMC/SATA/USB)** 선택
+- `Device node of SD device` → `/dev/mmcblk0p2` 입력
 
-**Yocto Settings**
-- YOCTO_MACHINE_NAME → `zynq-generic`
+**Yocto Settings** (필요시)
+- `YOCTO_MACHINE_NAME` → `zynq-generic` 확인
 
-설정 완료 후 저장하고 종료합니다.
+저장: **Exit** → **Yes** (저장)
 
 ### 4.2 루트 파일시스템 구성
 ```bash
 petalinux-config -c rootfs
 ```
 
-필요한 패키지들을 선택합니다:
-- `user packages` → 필요한 패키지 선택
-- `Filesystem Packages` → `base` → `busybox` 등 기본 패키지들
+필요한 패키지 선택:
+- `Filesystem Packages` → 필요한 도구들 선택
+- `user packages` → 커스텀 패키지 (필요시)
 
-### 4.3 커널 구성 (필요시)
+저장 후 종료
+
+### 4.3 커널 구성 (GPIO 확인)
 ```bash
 petalinux-config -c kernel
 ```
 
-GPIO 관련 드라이버가 활성화되어 있는지 확인:
-- `Device Drivers` → `GPIO Support`
-- `Device Drivers` → `GPIO Support` → `Memory mapped GPIO drivers`
+다음 항목들이 활성화되어 있는지 확인:
+- `Device Drivers` → `GPIO Support` → **활성화**
+- `Device Drivers` → `GPIO Support` → `Memory mapped GPIO drivers` → **활성화**
+- `Device Drivers` → `Input device support` → `Keyboards` → `GPIO Buttons` → **활성화**
+
+저장 후 종료
 
 ---
 
-## 5단계: 디바이스 트리 수정 (GPIO 버튼 설정)
+## 5단계: 디바이스 트리 수정 (GPIO 버튼)
 
 ### 5.1 시스템 사용자 디바이스 트리 편집
 ```bash
 vim project-spec/meta-user/recipes-bsp/device-tree/files/system-user.dtsi
 ```
 
-다음 내용을 추가합니다:
+**중요**: GPIO 번호는 Vivado 설계에 따라 다릅니다. 아래는 예시입니다.
+
 ```dts
 /include/ "system-conf.dtsi"
 / {
@@ -262,36 +313,40 @@ vim project-spec/meta-user/recipes-bsp/device-tree/files/system-user.dtsi
         
         btn0 {
             label = "btn0";
-            gpios = <&gpio0 50 0>; /* GPIO 50 */
-            linux,code = <0x100>; /* BTN_0 */
+            gpios = <&gpio0 50 0>;
+            linux,code = <0x100>;
             gpio-key,wakeup;
         };
         
         btn1 {
             label = "btn1";
-            gpios = <&gpio0 51 0>; /* GPIO 51 */
-            linux,code = <0x101>; /* BTN_1 */
+            gpios = <&gpio0 51 0>;
+            linux,code = <0x101>;
             gpio-key,wakeup;
         };
         
         btn2 {
             label = "btn2";
-            gpios = <&gpio0 52 0>; /* GPIO 52 */
-            linux,code = <0x102>; /* BTN_2 */
+            gpios = <&gpio0 52 0>;
+            linux,code = <0x102>;
             gpio-key,wakeup;
         };
         
         btn3 {
             label = "btn3";
-            gpios = <&gpio0 53 0>; /* GPIO 53 */
-            linux,code = <0x103>; /* BTN_3 */
+            gpios = <&gpio0 53 0>;
+            linux,code = <0x103>;
             gpio-key,wakeup;
         };
     };
 };
 ```
 
-**주의**: GPIO 번호는 Vivado 설계에서 사용한 실제 핀 번호에 맞게 수정해야 합니다.
+### 5.2 GPIO 번호 확인 방법
+Vivado에서:
+1. Block Design에서 GPIO 블록 확인
+2. AXI GPIO를 사용하는 경우: EMIO 핀 번호 확인
+3. EMIO GPIO는 54번부터 시작 (0-53은 MIO)
 
 ---
 
@@ -299,153 +354,287 @@ vim project-spec/meta-user/recipes-bsp/device-tree/files/system-user.dtsi
 
 ### 6.1 전체 시스템 빌드
 ```bash
+cd ~/petalinux_projects/zybo_z7_20_project
 petalinux-build
 ```
-빌드 시간은 시스템 사양에 따라 30분~2시간 정도 소요됩니다.
+
+**주의사항:**
+- 첫 빌드는 1-3시간 소요될 수 있습니다
+- VirtualBox 환경에서는 더 오래 걸릴 수 있습니다
+- 충분한 디스크 공간 확인 (최소 50GB 여유 필요)
+
+**빌드 진행 상황 모니터링:**
+```bash
+# 다른 터미널에서
+cd ~/petalinux_projects/zybo_z7_20_project
+tail -f build/build.log
+```
 
 ### 6.2 부트 이미지 생성
+빌드가 완료되면:
 ```bash
-petalinux-package --boot --fsbl images/linux/zynq_fsbl.elf --fpga images/linux/design_1_wrapper.bit --u-boot
+cd ~/petalinux_projects/zybo_z7_20_project
+petalinux-package --boot --fsbl images/linux/zynq_fsbl.elf \
+    --fpga images/linux/design_1_wrapper.bit --u-boot
 ```
 
 ---
 
 ## 7단계: SD 카드 이미지 생성
 
-### 7.1 WIC 이미지 생성
+### 7.1 단일 WIC 이미지 생성
 ```bash
-petalinux-package --wic --images-dir images/linux/ --bootfiles "BOOT.BIN boot.scr Image system.dtb"
+cd ~/petalinux_projects/zybo_z7_20_project
+petalinux-package --wic --images-dir images/linux/ \
+    --bootfiles "BOOT.BIN boot.scr Image system.dtb"
 ```
 
-### 7.2 이미지 파일 확인
-생성된 이미지 파일들:
+### 7.2 생성된 이미지 확인
 ```bash
-ls images/linux/
-# BOOT.BIN - 부트로더 + FPGA 비트스트림
-# Image - 리눅스 커널
-# system.dtb - 디바이스 트리
-# rootfs.ext4 - 루트 파일시스템
-# petalinux-sdimage.wic - 완전한 SD 카드 이미지
+ls -lh images/linux/
 ```
+
+주요 파일들:
+- **BOOT.BIN** - 부트로더 + FPGA 비트스트림 + U-Boot
+- **Image** - 리눅스 커널
+- **system.dtb** - 디바이스 트리
+- **rootfs.ext4** - 루트 파일시스템
+- **petalinux-sdimage.wic** - 완전한 SD 카드 이미지 (이것을 사용!)
 
 ---
 
-## 8단계: Windows로 이미지 전송
+## 8단계: SD 카드에 이미지 쓰기
 
-### 8.1 WSL에서 Windows로 파일 복사
+### 8.1 VirtualBox에서 SD 카드 액세스
+
+**방법 1: Ubuntu에서 직접 쓰기**
+
+1. SD 카드를 PC에 삽입
+2. VirtualBox 메뉴: **장치** → **USB** → SD 카드 리더기 선택
+3. Ubuntu에서 SD 카드 인식 확인:
 ```bash
-# WSL 사용시
-cp images/linux/petalinux-sdimage.wic /mnt/c/Users/[사용자명]/Desktop/
+lsblk
+# SD 카드가 /dev/sdb 또는 /dev/sdc로 표시됨
 ```
 
-### 8.2 네이티브 Ubuntu 사용시
-- USB 드라이브나 네트워크를 통해 Windows로 전송
-- 또는 scp를 사용하여 전송
+4. SD 카드 언마운트 (마운트되어 있는 경우):
+```bash
+sudo umount /dev/sdb*
+# 또는 해당 장치명
+```
+
+5. 이미지 쓰기:
+```bash
+cd ~/petalinux_projects/zybo_z7_20_project
+sudo dd if=images/linux/petalinux-sdimage.wic of=/dev/sdb bs=4M status=progress
+sudo sync
+```
+
+**주의**: `/dev/sdb`는 예시이며, 실제 SD 카드 장치명을 확인해야 합니다!
+
+### 8.2 공유 폴더를 통한 방법
+
+Windows에서 SD 카드에 쓰려면:
+
+1. 이미지를 공유 폴더로 복사:
+```bash
+cp ~/petalinux_projects/zybo_z7_20_project/images/linux/petalinux-sdimage.wic /media/sf_shared/
+```
+
+2. Windows에서 Rufus, Win32 Disk Imager, 또는 balenaEtcher 사용하여 SD 카드에 쓰기
+
+### 8.3 etcher 설치 (Ubuntu에서 GUI로 쓰기)
+```bash
+# balenaEtcher 다운로드 및 설치
+wget https://github.com/balena-io/etcher/releases/download/v1.18.11/balenaEtcher-1.18.11-x64.AppImage
+chmod +x balenaEtcher-*.AppImage
+./balenaEtcher-*.AppImage
+```
+
+Etcher에서:
+1. **Flash from file** → `petalinux-sdimage.wic` 선택
+2. **Select target** → SD 카드 선택
+3. **Flash!** 클릭
 
 ---
 
-## 9단계: SD 카드에 이미지 쓰기 (Windows)
+## 9단계: 보드 부팅 및 테스트
 
-### 9.1 도구 설치
-Windows에서 다음 중 하나의 도구를 설치합니다:
-- **Rufus** (권장): https://rufus.ie/
-- **Win32 Disk Imager**: https://sourceforge.net/projects/win32diskimager/
-- **Raspberry Pi Imager**: https://rpi.org/imager/
-
-### 9.2 Rufus를 사용한 이미지 쓰기
-1. Rufus 실행
-2. **Device**: SD 카드 선택 (보통 8GB 이상 권장)
-3. **Boot selection**: `petalinux-sdimage.wic` 파일 선택
-4. **Partition scheme**: `MBR`
-5. **Target system**: `BIOS or UEFI`
-6. **START** 버튼 클릭
-7. 모든 데이터가 삭제된다는 경고에서 **OK** 클릭
-
-### 9.3 Win32 Disk Imager 사용법
-1. Win32 Disk Imager 실행
-2. **Image File**: `petalinux-sdimage.wic` 파일 선택
-3. **Device**: SD 카드 드라이브 선택
-4. **Write** 버튼 클릭
-
----
-
-## 10단계: 보드 부팅 및 테스트
-
-### 10.1 하드웨어 설정
+### 9.1 하드웨어 설정
 1. SD 카드를 Zybo Z7-20 보드에 삽입
-2. UART-USB 케이블 연결 (115200 baud)
-3. 점퍼 설정을 SD 부팅 모드로 변경
+2. 점퍼 설정: **SD 부팅 모드**로 변경
+   - JP5: SD로 설정
+3. UART-USB 케이블 연결
 4. 전원 공급
 
-### 10.2 부팅 확인
-시리얼 터미널(PuTTY, TeraTerm 등)에서 부팅 과정 확인:
+### 9.2 시리얼 콘솔 연결 (Ubuntu)
+
+**minicom 설치 및 설정:**
+```bash
+sudo apt install -y minicom
+sudo minicom -s
 ```
-U-Boot 2022.01 (날짜) Xilinx Zynq
+
+설정:
+- **Serial port setup** 선택
+- Serial Device: `/dev/ttyUSB0` (또는 `/dev/ttyUSB1`)
+- Bps/Par/Bits: `115200 8N1`
+- Hardware Flow Control: **No**
+- Software Flow Control: **No**
+- **Save setup as dfl** 선택
+- **Exit**
+
+연결:
+```bash
+sudo minicom
+```
+
+**또는 screen 사용:**
+```bash
+sudo apt install -y screen
+sudo screen /dev/ttyUSB0 115200
+```
+
+### 9.3 부팅 확인
+시리얼 콘솔에서 부팅 과정 확인:
+```
+U-Boot 2022.01 (날짜)
 ...
 Starting kernel ...
 ...
-Welcome to PetaLinux
+PetaLinux 2022.1 zynq-generic /dev/ttyPS0
+
 zynq-generic login: root
+Password: root
 ```
 
-### 10.3 GPIO 버튼 테스트
+### 9.4 GPIO 버튼 테스트
 ```bash
-# 부팅 후 루트로 로그인
+# 루트로 로그인
 root@zynq-generic:~# 
 
-# GPIO 버튼 이벤트 확인
-cat /proc/bus/input/devices
-# gpio-keys 디바이스 확인
+# 입력 디바이스 확인
+cat /proc/bus/input/devices | grep -A 5 gpio-keys
 
-# 버튼 입력 테스트
+# GPIO 상태 확인
+cat /sys/kernel/debug/gpio
+
+# 버튼 이벤트 테스트
 evtest /dev/input/event0
-# 버튼을 누르면 이벤트가 표시됨
+# 버튼을 누르면 이벤트가 화면에 표시됨
 ```
 
 ---
 
 ## 트러블슈팅
 
-### 일반적인 문제들
+### VirtualBox 관련 문제
 
-**1. 빌드 오류**
+**1. 디스크 공간 부족**
 ```bash
+# 디스크 사용량 확인
+df -h
+du -sh ~/petalinux_projects/zybo_z7_20_project
+
+# 빌드 캐시 정리
+cd ~/petalinux_projects/zybo_z7_20_project
+petalinux-build -c cleanall
+```
+
+**2. USB 장치가 인식되지 않음**
+- VirtualBox 확장 팩 설치 필요
+- **파일** → **환경설정** → **확장** → Oracle VM VirtualBox Extension Pack 설치
+- VM을 종료하고 USB 3.0 컨트롤러 활성화
+
+**3. 공유 폴더 접근 권한 오류**
+```bash
+sudo usermod -aG vboxsf $USER
+# 로그아웃 후 재로그인
+```
+
+### PetaLinux 빌드 문제
+
+**1. 빌드 오류 발생**
+```bash
+# 로그 확인
+cat build/build.log | grep -i error
+
 # 클린 빌드
 petalinux-build -c cleanall
 petalinux-build
 ```
 
-**2. 디스크 공간 부족**
+**2. 메모리 부족**
+- VirtualBox에서 VM에 더 많은 RAM 할당 (최소 8GB, 권장 16GB)
+- 스왑 공간 증가:
 ```bash
-# 임시 파일 정리
-petalinux-build -c cleanall
-rm -rf build/tmp/
+sudo fallocate -l 8G /swapfile
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
 ```
 
-**3. 부팅이 안 되는 경우**
-- SD 카드 파티션 테이블 확인
-- UART 연결 및 점퍼 설정 재확인
-- BOOT.BIN 파일 재생성
+**3. 네트워크 타임아웃**
+```bash
+# DNS 확인
+cat /etc/resolv.conf
 
-**4. GPIO 버튼이 인식되지 않는 경우**
-- 디바이스 트리의 GPIO 번호 확인
-- Vivado 설계에서 실제 핀 할당 재확인
-- 커널 로그에서 gpio-keys 드라이버 로딩 확인
+# 네트워크 연결 확인
+ping -c 4 google.com
 
-### 유용한 디버깅 명령어
+# VirtualBox 네트워크 어댑터를 NAT로 설정
+```
+
+### 부팅 문제
+
+**1. SD 카드가 부팅되지 않음**
+- 점퍼 설정 재확인 (SD 모드)
+- SD 카드 포맷 후 재시도
+- BOOT.BIN 파일 확인
+
+**2. 커널 패닉**
+- bootargs 확인 (rootfs 경로 `/dev/mmcblk0p2`)
+- 디바이스 트리 확인
+
+**3. GPIO 버튼 미작동**
 ```bash
 # 커널 메시지 확인
 dmesg | grep gpio
+dmesg | grep input
 
-# GPIO 상태 확인
-cat /sys/kernel/debug/gpio
+# GPIO 드라이버 확인
+lsmod | grep gpio
+```
 
-# 입력 디바이스 목록
-ls /dev/input/
+---
 
-# 시스템 정보
-cat /proc/version
-cat /proc/cpuinfo
+## 유용한 명령어 모음
+
+```bash
+# PetaLinux 환경 재로드
+source ~/petalinux/2022.1/settings.sh
+
+# 빌드 로그 실시간 확인
+tail -f build/build.log
+
+# 특정 컴포넌트만 재빌드
+petalinux-build -c u-boot -x cleanall
+petalinux-build -c u-boot
+
+# 커널만 재빌드
+petalinux-build -c kernel
+
+# 루트 파일시스템만 재빌드
+petalinux-build -c rootfs
+
+# 디바이스 트리만 재빌드
+petalinux-build -c device-tree
+
+# 부팅 이미지만 재생성
+cd ~/petalinux_projects/zybo_z7_20_project
+petalinux-package --boot --force --fsbl images/linux/zynq_fsbl.elf \
+    --fpga images/linux/design_1_wrapper.bit --u-boot
 ```
 
 ---
@@ -453,6 +642,6 @@ cat /proc/cpuinfo
 ## 참고 자료
 - [Xilinx PetaLinux Tools Documentation](https://docs.xilinx.com/r/en-US/ug1144-petalinux-tools-reference-guide)
 - [Digilent Zybo Z7 Reference Manual](https://digilent.com/reference/programmable-logic/zybo-z7/reference-manual)
-- [Linux GPIO Subsystem Documentation](https://www.kernel.org/doc/html/latest/driver-api/gpio/)
+- [VirtualBox Documentation](https://www.virtualbox.org/manual/)
 
-이 가이드를 통해 Zybo Z7-20에서 GPIO 4버튼이 포함된 PetaLinux 시스템을 성공적으로 구축할 수 있습니다.
+이 가이드를 통해 VirtualBox Ubuntu 환경에서 Zybo Z7-20용 PetaLinux 시스템을 성공적으로 구축할 수 있습니다.
