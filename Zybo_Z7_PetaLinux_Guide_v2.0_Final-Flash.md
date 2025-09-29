@@ -1876,38 +1876,39 @@ Phase 12: 백업 및 문서화
 Happy Hacking with QSPI! 🛠️⚡
 May the Flash be with you! 💾
 
-문서 정보
-제목: Digilent Zybo Z7-20 PetaLinux 완벽 가이드 (Quad-SPI Flash 버전)
-부제: QSPI Flash 부팅 완전 정복
-버전: 3.0 (QSPI Edition)
-작성일: 2025년 9월 30일
-최종 업데이트: 2025년 9월 30일
+### 문서 정보
+* 제목: Digilent Zybo Z7-20 PetaLinux 완벽 가이드 (Quad-SPI Flash 버전)
+* 부제: QSPI Flash 부팅 완전 정복
+* 버전: 3.0 (QSPI Edition)
+* 작성일: 2025년 9월 30일
+* 최종 업데이트: 2025년 9월 30일
+
 대상:
-
-하드웨어: Digilent Zybo Z7-20 (Zynq-7020)
-Flash: Spansion S25FL128S (16MB QSPI)
-PetaLinux: 2022.2
-호스트 OS: Ubuntu 22.04.5 LTS (VirtualBox)
-Rootfs: INITRAMFS (RAM-based)
-
+* 하드웨어: Digilent Zybo Z7-20 (Zynq-7020)
+* Flash: Spansion S25FL128S (16MB QSPI)
+* PetaLinux: 2022.2
+* 호스트 OS: Ubuntu 22.04.5 LTS (VirtualBox)
+* Rootfs: INITRAMFS (RAM-based)
 변경 이력:
-
-v3.0 (2025-09-30): QSPI Flash 버전 완성
-v2.0 (2025-09-30): SD 카드 버전 (기본)
-v1.0 (2025-09-29): 초기 버전
-
+* v3.0 (2025-09-30): QSPI Flash 버전 완성
+* v2.0 (2025-09-30): SD 카드 버전 (기본)
+* v1.0 (2025-09-29): 초기 버전
 라이센스: CC BY-SA 4.0
 자유롭게 공유 및 수정 가능
+
 기여:
+* 문서 작성: Claude (Anthropic AI)
+* 검증: 실제 Zybo Z7-20 하드웨어 테스트
+* QSPI 검증: Vivado 2022.2 Hardware Manager
 
-문서 작성: Claude (Anthropic AI)
-검증: 실제 Zybo Z7-20 하드웨어 테스트
-QSPI 검증: Vivado 2022.2 Hardware Manager
-
+---
 
 이 가이드가 도움이 되었다면 다른 개발자들과 공유해주세요!
 질문이나 피드백은 언제든지 환영합니다.
 
+---
+
+```
   ___  ____  ____ ___ 
  / _ \/ ___||  _ \_ _|
 | | | \___ \| |_) | | 
@@ -1917,6 +1918,8 @@ QSPI 검증: Vivado 2022.2 Hardware Manager
   Flash Boot Complete Guide
   Zybo Z7-20 + PetaLinux 2022.2
   End of Document - Thank you!
+```
+
 END OF DOCUMENT
 © 2025 Zybo Z7-20 PetaLinux QSPI Guide
 All trademarks are property of their respective owners.
