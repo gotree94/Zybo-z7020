@@ -121,9 +121,10 @@ echo "dash dash/sh boolean false" | sudo debconf-set-selections
 sudo dpkg-reconfigure -f noninteractive dash
 ```
 
-3. PetaLinux 2022.2 설치
-3.1 인스톨러 준비
-bash# Windows에서 C:\share로 인스톨러 복사 후
+## 3. PetaLinux 2022.2 설치
+### 3.1 인스톨러 준비
+```bash
+# Windows에서 C:\share로 인스톨러 복사 후
 mkdir -p ~/petalinux_work
 cp /mnt/share/petalinux-v2022.2-10141622-installer.run ~/petalinux_work/
 chmod +x ~/petalinux_work/petalinux-v2022.2-10141622-installer.run
@@ -159,9 +160,16 @@ source ~/petalinux/2022.2/settings.sh
 
 petalinux-create --type project --template zynq --name myproject_qspi
 cd myproject_qspi
-4.3 하드웨어 설정
-bashpetalinux-config --get-hw-description=~/projects/
+```
+
+### 4.3 하드웨어 설정
+
+```bash
+petalinux-config --get-hw-description=~/projects/
+```
+
 ⭐ QSPI 전용 설정 메뉴:
+```
 Image Packaging Configuration --->
     Root filesystem type --->
         (X) INITRAMFS                    ← QSPI는 INITRAMFS 사용!
@@ -186,27 +194,40 @@ Subsystem AUTO Hardware Settings --->
     Ethernet Settings --->
         Primary Ethernet --->
             (X) ps7_ethernet_0
+```
 저장: Save → Exit
 
-5. QSPI Flash 설정
-5.1 QSPI Flash 정보
-Zybo Z7-20 QSPI Spec:
+---
+
+## 5. QSPI Flash 설정
+### 5.1 QSPI Flash 정보
+**Zybo Z7-20 QSPI Spec:
+```
 Flash IC: Spansion S25FL128S
 용량: 16MB (128Mbit)
 섹터 크기: 64KB
 페이지 크기: 256 bytes
 주소: 0x00000000 ~ 0x00FFFFFF
-5.2 QSPI 파티션 레이아웃
+```
+
+### 5.2 QSPI 파티션 레이아웃
+```
 0x00000000 - 0x000FFFFF : BOOT.BIN (1MB)
 0x00100000 - 0x005FFFFF : Linux Kernel + DTB (5MB)
 0x00600000 - 0x00FFFFFF : RootFS (INITRAMFS, 10MB)
-5.3 Device Tree 확인
-bashcd ~/projects/myproject_qspi/project-spec/meta-user/recipes-bsp/device-tree/files/
+```
+
+### 5.3 Device Tree 확인
+```bash
+cd ~/projects/myproject_qspi/project-spec/meta-user/recipes-bsp/device-tree/files/
 
 # system-user.dtsi 편집
 vi system-user.dtsi
+```
+
 QSPI Device Tree 추가:
-dts/include/ "system-conf.dtsi"
+```dts
+/include/ "system-conf.dtsi"
 / {
 };
 
@@ -239,12 +260,18 @@ dts/include/ "system-conf.dtsi"
         };
     };
 };
+```
 
-6. Root 로그인 설정
-6.1 Rootfs 설정
-bashcd ~/projects/myproject_qspi
+## 6. Root 로그인 설정
+### 6.1 Rootfs 설정
+```bash
+cd ~/projects/myproject_qspi
 petalinux-config -c rootfs
+```
+
 ⭐ 필수 설정 (QSPI용):
+
+```
 Image Features --->
     [*] debug-tweaks                  ← 필수!
     [*] allow-empty-password          ← 필수!
@@ -265,34 +292,39 @@ Filesystem Packages --->
     network --->
         [*] openssh                    ← 선택
         [*] openssh-sshd
+```
+
 ⚠️ INITRAMFS 용량 제한:
-
-QSPI Flash는 10MB로 제한
-불필요한 패키지는 제외
-최소 구성 권장
-
+* QSPI Flash는 10MB로 제한
+* 불필요한 패키지는 제외
+* 최소 구성 권장
 저장: Save → Exit
 
-7. PetaLinux 빌드
-7.1 전체 빌드
-bashcd ~/projects/myproject_qspi
+## 7. PetaLinux 빌드
+### 7.1 전체 빌드
+```bash
+cd ~/projects/myproject_qspi
 source ~/petalinux/2022.2/settings.sh
 
 petalinux-build
+```
+
 빌드 시간:
-
-첫 빌드: 1-3시간
-증분 빌드: 10-30분
-
+* 첫 빌드: 1-3시간
+* 증분 빌드: 10-30분
 빌드 성공 확인:
-bashls -lh images/linux/
+```bash
+ls -lh images/linux/
 
 # 확인할 파일들:
 # - BOOT.BIN (부트로더)
 # - image.ub (Kernel + DTB + INITRAMFS)
 # - boot.scr (U-Boot 스크립트)
-7.2 QSPI 부트 이미지 생성
-bashcd ~/projects/myproject_qspi
+```
+
+### 7.2 QSPI 부트 이미지 생성
+```bash
+cd ~/projects/myproject_qspi
 
 petalinux-package --boot \
     --fsbl images/linux/zynq_fsbl.elf \
@@ -302,15 +334,18 @@ petalinux-package --boot \
     --flash-size 16 \
     --flash-intf qspi-x1-single \
     --force
+```
 생성 파일:
+* images/linux/BOOT.BIN (QSPI 부팅용)
+* images/linux/boot.bin (백업)
 
-images/linux/BOOT.BIN (QSPI 부팅용)
-images/linux/boot.bin (백업)
+---
 
+## 8. QSPI Flash 이미지 생성
+### 8.1 단일 QSPI 이미지 생성
 
-8. QSPI Flash 이미지 생성
-8.1 단일 QSPI 이미지 생성
-bashcd ~/projects/myproject_qspi/images/linux/
+```bash
+cd ~/projects/myproject_qspi/images/linux/
 
 # QSPI 전체 이미지 생성 (16MB)
 petalinux-package --boot \
@@ -322,8 +357,11 @@ petalinux-package --boot \
     --flash-intf qspi-x1-single \
     --force \
     -o qspi_flash_image.bin
-8.2 수동 이미지 생성 (고급)
-bashcd ~/projects/myproject_qspi/images/linux/
+```
+
+### 8.2 수동 이미지 생성 (고급)
+```bash
+cd ~/projects/myproject_qspi/images/linux/
 
 # 16MB 빈 이미지 생성
 dd if=/dev/zero of=qspi_manual.bin bs=1M count=16
@@ -336,8 +374,11 @@ dd if=image.ub of=qspi_manual.bin bs=1 seek=$((1*1024*1024)) conv=notrunc
 
 # 확인
 ls -lh qspi_*.bin
-8.3 Windows로 복사
-bashcd ~/projects/myproject_qspi/images/linux/
+```
+
+### 8.3 Windows로 복사
+```bash
+cd ~/projects/myproject_qspi/images/linux/
 
 # QSPI 이미지 복사
 cp qspi_flash_image.bin /mnt/share/
@@ -347,27 +388,25 @@ mkdir -p /mnt/share/zybo_qspi
 cp BOOT.BIN image.ub boot.scr /mnt/share/zybo_qspi/
 
 sync
+```
 
-9. QSPI Flash 프로그래밍
-9.1 필요한 도구
+## 9. QSPI Flash 프로그래밍
+### 9.1 필요한 도구
 Vivado 필요:
+* Vivado 2022.2
+* Hardware Manager
+* JTAG 케이블 (Digilent HS2 또는 Platform Cable USB II)
 
-Vivado 2022.2
-Hardware Manager
-JTAG 케이블 (Digilent HS2 또는 Platform Cable USB II)
-
-9.2 방법 1: Vivado Hardware Manager 사용 (권장)
+### 9.2 방법 1: Vivado Hardware Manager 사용 (권장)
 단계:
-
-Zybo Z7-20 연결
-
+1. Zybo Z7-20 연결
    - JTAG 케이블을 PC와 Zybo J13 포트에 연결
    - 전원 ON (SW0)
    - JP5: JTAG 모드 (모든 핀 열림)
-
-Vivado 실행
-
-tcl   vivado &
+2. Vivado 실행
+```tcl
+   vivado &
+```
 
 Hardware Manager 열기
 
