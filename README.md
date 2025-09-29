@@ -105,6 +105,33 @@ sudo apt install -y gcc-multilib libc6-dev-i386 libncurses5-dev
 sudo apt install -y zlib1g:i386 libtool texinfo
 ```
 
+```bash
+# 패키지 목록 업데이트
+sudo apt update
+
+# 누락된 시스템 도구들 설치
+sudo apt install -y net-tools xterm autoconf libtool texinfo gcc-multilib
+
+# 누락된 개발 라이브러리 설치
+sudo apt install -y libncurses5-dev libncursesw5-dev
+
+# 32비트 라이브러리 지원 활성화
+sudo dpkg --add-architecture i386
+sudo apt update
+
+# 32비트 zlib 설치
+sudo apt install -y zlib1g:i386
+
+# 추가로 필요할 수 있는 패키지들
+sudo apt install -y libc6:i386 libstdc++6:i386 libgcc1:i386
+sudo apt install -y lib32z1 lib32ncurses6
+
+# 설치 확인
+which netstat xterm autoconf libtool
+dpkg -l | grep libncurses
+dpkg -l | grep zlib1g:i386
+```
+
 ### 1.2 Bash 쉘 설정
 ```bash
 sudo dpkg-reconfigure dash
