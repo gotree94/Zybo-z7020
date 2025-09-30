@@ -1114,6 +1114,11 @@ cat /etc/fstab | grep share
 sudo reboot
 ```
 
+```
+sudo usermod -aG vboxsf gotree94
+```
+
+
 ---
 
 ## 12. 체크리스트
