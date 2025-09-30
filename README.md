@@ -253,7 +253,7 @@ Windows에서 Ubuntu로 파일 복사:
 # C:\SharedFolder에 복사한 후
 
 # Ubuntu에서:
-cp /media/sf_SharedFolder/petalinux-v2022.2-10141622-installer.run ~/petalinux_work/
+cp /mnt/share/petalinux-v2022.2-10141622-installer.run ~/petalinux_work/
 chmod +x ~/petalinux_work/petalinux-v2022.2-10141622-installer.run
 ```
 
@@ -304,7 +304,7 @@ cd ~/projects
 
 ```bash
 # design_1_wrapper.xsa를 Windows의 SharedFolder로 복사한 후
-cp /media/sf_SharedFolder/design_1_wrapper.xsa ~/projects/
+cp /mnt/share/design_1_wrapper.xsa ~/projects/
 
 # XSA 파일 내용 확인
 unzip -l design_1_wrapper.xsa
