@@ -354,6 +354,65 @@ petalinux-config --get-hw-description=~/projects/
 
 **설정 메뉴가 나타남**
 
+```
+misc/config System Configuration
+	Arrow keys navigate the menu.  
+	<Enter> selects submenus ---> (or empty submenus ----).  
+	Highlighted letters are hotkeys.  
+	Pressing <Y> includes, <N> excludes, <M> modularizes features.  
+	Press <Esc><Esc> to exit, <?> for Help, </> for Search.  
+	Legend: [*] built-in  [ ] excluded  <M> module  < > module capable 
+  
+-*- ZYNQ Configuration
+  Linux Components Selection  --->
+  Auto Config Settings  --->
+-*- Subsystem AUTO Hardware Settings  --->
+  DTG Settings  --->
+  FSBL Configuration  --->
+  FPGA Manager  --->
+  u-boot Configuration  --->
+  Linux Configuration  --->
+  Image Packaging Configuration  --->
+  Firmware Version Configuration  --->
+  Yocto Settings  --->
+```
+
+```
+Image Packaging Configuration
+	Arrow keys navigate the menu.  
+	<Enter> selects submenus ---> (or empty submenus ----).  
+	Highlighted letters are hotkeys.  
+	Pressing <Y> includes, <N> excludes, <M> modularizes features.  
+	Press <Esc><Esc> to exit, <?> for Help, </> for Search.  
+	Legend: [*] built-in  [ ] excluded  <M> module  < > module capable  
+  
+Root filesystem type (INITRD)  --->
+  (0x0) RAMDISK loadaddr
+  (petalinux-image-minimal) INITRAMFS/INITRD Image name
+  (image.ub) name for bootable kernel image
+  (cpio cpio.gz cpio.gz.u-boot ext4 tar.gz jffs2) Root filesystem formats
+  (0x1000) DTB padding size
+  [*] Copy final images to tftpboot
+  (/tftpboot) tftpboot directory
+```
+
+```
+┌─────────────────────Root filesystem type ─────────────────────┐
+│  Use the arrow keys to navigate this window or press the      │  
+│  hotkey of the item you wish to select followed by the <SPACE │  
+│  BAR>. Press <?> for additional information about this        │  
+│ ┌───────────────────────────────────────────────────────────┐ │  
+│ │                ( ) INITRAMFS                              │ │  
+│ │                (X) INITRD                                 │ │  
+│ │                ( ) JFFS2                                  │ │  
+│ │                ( ) UBI/UBIFS                              │ │  
+│ │                ( ) NFS                                    │ │  
+│ │                ( ) EXT4 (SD/eMMC/SATA/USB)                │ │  
+│ │               ( ) other                                   │ │  
+│ └───────────────────────────────────────────────────────────┘ │  
+└───────────────────────────────────────────────────────────────┘ 
+```
+
 ### 4.5 시스템 설정 (중요!)
 
 #### **Image Packaging Configuration**
