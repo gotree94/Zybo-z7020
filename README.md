@@ -693,6 +693,67 @@ cat ~/projects/myproject/project-spec/configs/rootfs_config | grep -i "debug\|em
 ```
 ---
 
+1. GCC 컴파일러 찾기
+검색 결과 gcc-sanitizers만 나왔다면, 실제 gcc 패키지는 다른 위치에 있거나 다른 이름일 수 있습니다.
+
+다시 검색해보세요:
+```
+/packagegroup-core-buildessential
+```
+또는 직접 메뉴에서:
+```
+Filesystem Packages → 
+  packagegroup → 
+    packagegroup-core-buildessential
+```   
+이 패키지를 활성화하면 gcc, g++, make가 모두 포함됩니다.
+```
+Filesystem Packages → devel → 
+  [*] packagegroup-core-buildessential
+```
+
+3. Image Features 옵션들이 안 보이는 이유
+PetaLinux 버전에 따라 이런 옵션들이 다른 방식으로 관리됩니다.
+해결 방법: 설정 파일 직접 수정
+```bash
+cd ~/projects/myproject
+vi project-spec/configs/rootfs_config
+```
+다음 라인들을 추가:
+```
+CONFIG_debug-tweaks=y
+CONFIG_empty-root-password=y
+CONFIG_auto-login=y
+```
+
+그리고 project-spec/meta-user/conf/petalinuxbsp.conf 파일도 확인:
+
+```bash
+vi project-spec/meta-user/conf/petalinuxbsp.conf
+```
+다음 라인 추가:
+```
+EXTRA_IMAGE_FEATURES += "debug-tweaks empty-root-password allow-empty-password"
+EXTRA_IMAGE_FEATURES += "serial-autologin-root"
+```
+또는 local.conf 수정:
+
+```bash
+vi project-spec/meta-user/conf/local.conf
+```
+추가:
+```
+EXTRA_IMAGE_FEATURES += "debug-tweaks"
+EXTRA_IMAGE_FEATURES += "empty-root-password"
+EXTRA_IMAGE_FEATURES += "allow-empty-password"
+```
+
+---
+
+
+
+
+
 ## 5. PetaLinux 빌드
 
 ### 5.1 전체 시스템 빌드
