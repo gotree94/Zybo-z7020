@@ -479,11 +479,127 @@ Subsystem AUTO Hardware Settings  --->
         Primary SD/SDIO (ps7_sd_0)  --->
             (X) ps7_sd_0
 ```
-
 **설정 저장:**
 - `Save` 선택
 - 기본 파일명 `.config` 그대로 저장
 - `Exit` 선택
+  
+**확인내용**
+  ---
+```
+  ┌───────────────────Subsystem AUTO Hardware Settings ────────────────────────────┐
+  │  Arrow keys navigate the menu.                                                 │  
+  │    <Enter> selects submenus ---> (or empty submenus ----).                     │  
+  │  Highlighted letters are hotkeys.                                              │  
+  │  Pressing <Y> includes, <N> excludes, <M>                                      │  
+  │  modularizes features.                                                         │   
+  │  Press <Esc><Esc> to exit, <?> for Help, </> for Search.                       │   
+  │  Legend: [*] built-in  [ ] excluded  <M> module  < > module capable            │  
+  │                                                                                │  
+  │ ┌────────────────────────────────────────────────────────────────────────────┐ │  
+  │ │   --- Subsystem AUTO Hardware Settings                                     │ │  
+  │ │         System Processor (ps7_cortexa9_0)  --->                            │ │  
+  │ │         Memory Settings  --->                                              │ │  
+  │ │         Serial Settings  --->                                              │ │  
+  │ │         Ethernet Settings  --->                                            │ │  
+  │ │         Flash Settings  --->                                               │ │  
+  │ │         SD/SDIO Settings  --->                                             │ │  
+  │ │         RTC Settings  --->                                                 │ │  
+  │ │                                                                            │ │  
+  │ └────────────────────────────────────────────────────────────────────────────┘ │  
+  └────────────────────────────────────────────────────────────────────────────────┘
+```
+  ---  
+```  
+  ┌────────────────────── Serial Settings ─────────────────────────────────────────┐
+  │  Arrow keys navigate the menu.                                                 │  
+  │ <Enter> selects submenus ---> (or empty submenus ----).                        │  
+  │ Highlighted letters are hotkeys.                                               │  
+  │ Pressing <Y> includes, <N> excludes, <M>                                       │  
+  │  modularizes features.                                                         │  
+  │ Press <Esc><Esc> to exit, <?> for Help, </> for Search.                        │  
+  │ Legend: [*] built-in  [ ] excluded  <M> module  < > module capable             │  
+  │                                                                                │ 
+  │                                                                                │ 
+  │ ┌────────────────────────────────────────────────────────────────────────────┐ │  
+  │ │  FSBL Serial stdin/stdout (ps7_uart_1)  --->                               │ │  
+  │ │  DTG Serial stdin/stdout (ps7_uart_1)  --->                                │ │  
+  │ │  System stdin/stdout baudrate for ps7_uart_1 (115200)  --->                │ │
+  │ └────────────────────────────────────────────────────────────────────────────┘ │  
+  └────────────────────────────────────────────────────────────────────────────────┘ 
+
+  ┌──────────────────────────FSBL Serial stdin/stdout ────────────────────────────┐
+  │  Use the arrow keys to navigate this window or press the                      │  
+  │  hotkey of the item you wish to select followed by the <SPACE BAR>.           │
+  │  Press <?> for additional information about this                              │  
+  │ ┌───────────────────────────────────────────────────────────────────────────┐ │  
+  │ │                      (X) ps7_uart_1                                       │ │  
+  │ │                      ( ) manual                                           │ │  
+  │ │                                                                           │ │  
+  │ └───────────────────────────────────────────────────────────────────────────┘ │  
+  └───────────────────────────────────────────────────────────────────────────────┘
+```
+  ---
+```  
+  ┌───────────────────────────── Ethernet Settings ───────────────────────────────┐
+  │  Arrow keys navigate the menu.                                                │
+  │  <Enter> selects submenus ---> (or empty submenus ----).                      │
+  │  Highlighted letters are hotkeys.                                             │
+  │  Pressing <Y> includes, <N> excludes, <M>                                     │  
+  │  modularizes features.                                                        │
+  │  Press <Esc><Esc> to exit, <?> for Help, </> for Search.                      │
+  │  Legend: [*] built-in  [ ] excluded  <M> module  < > module capable           │  
+  │                                                                               │ 
+  │ ┌───────────────────────────────────────────────────────────────────────────┐ │  
+  │ │            Primary Ethernet (ps7_ethernet_0)  --->                        │ │  
+  │ │        [ ] Randomise MAC address                                          │ │  
+  │ │        (00:0a:35:00:1e:53) Ethernet MAC address                           │ │  
+  │ │        [*] Obtain IP address automatically                                │ │  
+  │ │                                                                           │ │  
+  │ └───────────────────────────────────────────────────────────────────────────┘ │  
+  └───────────────────────────────────────────────────────────────────────────────┘ 
+
+  ┌──────────────────────────── Primary Ethernet ───────────────────────┐
+  │  Use the arrow keys to navigate this window or press the            │  
+  │  hotkey of the item you wish to select followed by the <SPACE       │  
+  │  BAR>. Press <?> for additional information about this              │  
+  │ ┌─────────────────────────────────────────────────────────────────┐ │  
+  │ │                    (X) ps7_ethernet_0                           │ │  
+  │ │                    ( ) manual                                   │ │  
+  │ │                                                                 │ │  
+  │ └─────────────────────────────────────────────────────────────────┘ │  
+  └─────────────────────────────────────────────────────────────────────┘
+```
+  ---
+```  
+  ┌──────────────────── SD/SDIO Settings ──────────────────────────────────┐
+  │  Arrow keys navigate the menu.                                         │  
+  │  <Enter> selects submenus ---> (or empty submenus ----).               │  
+  │  Highlighted letters are hotkeys.                                      │  
+  │  Pressing <Y> includes, <N> excludes, <M> modularizes features.        │  
+  │  Press <Esc><Esc> to exit, <?> for Help, </> for Search.               │  
+  │  Legend: [*] built-in  [ ] excluded  <M> module  < > module capable    │  
+  │                                                                        │ 
+  │                                                                        │ 
+  │ ┌────────────────────────────────────────────────────────────────────┐ │  
+  │ │                   Primary SD/SDIO (ps7_sd_0)  --->                 │ │  
+  │ │                                                                    │ │  
+  │ └────────────────────────────────────────────────────────────────────┘ │  
+  └────────────────────────────────────────────────────────────────────────┘ 
+  
+ ┌─────────────────────── Primary SD/SDIO ───────────────────────┐
+ │  Use the arrow keys to navigate this window or press the      │  
+ │  hotkey of the item you wish to select followed by the <SPACE │  
+ │  BAR>. Press <?> for additional information about this        │  
+ │ ┌───────────────────────────────────────────────────────────┐ │  
+ │ │                       (X) ps7_sd_0                        │ │  
+ │ │                       ( ) manual                          │ │  
+ │ │                                                           │ │  
+ │ └───────────────────────────────────────────────────────────┘ │  
+ └───────────────────────────────────────────────────────────────┘
+```
+  ---
+
 
 ### 4.6 Root Filesystem 설정
 
