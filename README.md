@@ -97,13 +97,13 @@ sudo reboot
 
 ```bash
 # 사용자를 vboxsf 그룹에 추가
-sudo usermod -aG vboxsf $USER
+sudo usermod -aG vboxsf gotree94
 
 # 재부팅
 sudo reboot
 
 # 공유 폴더 확인
-ls -la /media/sf_SharedFolder
+ls -la /mnt/share
 ```
 
 ---
