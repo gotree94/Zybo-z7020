@@ -354,6 +354,22 @@ petalinux-config --get-hw-description=~/projects/
 
 **설정 메뉴가 나타남**
 
+### 4.5 시스템 설정 (중요!)
+
+#### **Image Packaging Configuration**
+```
+Image Packaging Configuration  --->
+    Root filesystem type (SD card)  --->
+        (X) SD card
+        ( ) INITRAMFS
+        ( ) INITRD
+        ( ) NFS
+    
+    Copy final images to tftpboot  --->
+        [ ] Copy final images to tftpboot  (비활성화 권장)
+```
+
+**확인내용**
 ```
 misc/config System Configuration
 	Arrow keys navigate the menu.  
@@ -413,27 +429,40 @@ Root filesystem type (INITRD)  --->
 └───────────────────────────────────────────────────────────────┘ 
 ```
 
-### 4.5 시스템 설정 (중요!)
-
-#### **Image Packaging Configuration**
-```
-Image Packaging Configuration  --->
-    Root filesystem type (SD card)  --->
-        (X) SD card
-        ( ) INITRAMFS
-        ( ) INITRD
-        ( ) NFS
-    
-    Copy final images to tftpboot  --->
-        [ ] Copy final images to tftpboot  (비활성화 권장)
-```
-
 #### **Yocto Settings**
+
 ```
 Yocto Settings  --->
     YOCTO_MACHINE_NAME (zynq-generic)  --->
     [*] Enable auto resize SD card root filesystem
 ```
+
+**확인내용**
+```
+  ┌──────────────────────────── Yocto Settings ──────────────────────────────────────────┐
+  │  Arrow keys navigate the menu.                                                       │  
+  │  <Enter> selects submenus ---> (or empty submenus ----).                             │  
+  │  Highlighted letters are hotkeys.                                                    │  
+  │  Pressing <Y> includes, <N> excludes, <M> modularizes features.                      │  
+  │  Press <Esc><Esc> to exit, <?> for Help, </> for Search.                             │  
+  │  Legend: [*] built-in  [ ] excluded  <M> module  < > module capable                  │  
+  │                                                                                      │  
+  │ ┌──────────────────────────────────────────────────────────────────────────────────┐ │  
+  │ │                  (zynq-generic) YOCTO_MACHINE_NAME                               │ │  
+  │ │                       TMPDIR Location  --->                                      │ │  
+  │ │                       Devtool Workspace Location  --->                           │ │  
+  │ │                       Parallel thread execution  --->                            │ │  
+  │ │                       Add pre-mirror url   --->                                  │ │  
+  │ │                       Local sstate feeds settings  --->                          │ │  
+  │ │                  [*] Enable Network sstate feeds                                 │ │  
+  │ │                       Network sstate feeds URL  --->                             │ │  
+  │ │                  [ ] Enable BB NO NETWORK                                        │ │  
+  │ │                  [ ] Enable Buildtools Extended                                  │ │  
+  │ │                      User Layers  --->                                           │ │ 
+  │ └──────────────────────────────────────────────────────────────────────────────────┘ │ 
+  └──────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 
 #### **Subsystem AUTO Hardware Settings**
 ```
