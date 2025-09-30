@@ -427,7 +427,7 @@ Filesystem Packages  --->
 - `Save` → `Exit`
 
 ---
-### 4.6. Root 로그인 설정 (중요!)
+### 4.7 Root 로그인 설정 (중요!)
 
 **기본 상태의 문제:**
 ```
@@ -441,7 +441,7 @@ Login incorrect
 - 하지만 root 패스워드가 설정되지 않음
 - 결과: 로그인 불가능
 
-#### 4.6.1 해결 방법 - Rootfs 설정 (필수!)
+#### 4.7.1 해결 방법 - Rootfs 설정 (필수!)
 
 ```bash
 cd ~/projects/myproject
@@ -475,7 +475,7 @@ Filesystem Packages --->
 
 저장: `Save` → `Exit`
 
-#### 4.6.2 설정 확인
+#### 4.7.2 설정 확인
 
 ```bash
 # 설정이 제대로 되었는지 확인
