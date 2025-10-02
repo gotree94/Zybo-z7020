@@ -899,15 +899,15 @@ ls -lh petalinux-sdimage.wic.gz
 
 ```bash
 # WIC 이미지 복사
-cp petalinux-sdimage.wic /media/sf_SharedFolder/
+cp petalinux-sdimage.wic /mnt/share/
 
 # 또는 압축 파일
-cp petalinux-sdimage.wic.gz /media/sf_SharedFolder/
+cp petalinux-sdimage.wic.gz /mnt/share/
 
 # 개별 부트 파일도 백업
-mkdir -p /media/sf_SharedFolder/zybo_boot_files/
-cp BOOT.BIN image.ub boot.scr /media/sf_SharedFolder/zybo_boot_files/
-cp rootfs.tar.gz /media/sf_SharedFolder/zybo_boot_files/
+mkdir -p /mnt/share/zybo_boot_files/
+cp BOOT.BIN image.ub boot.scr /mnt/share/zybo_boot_files/
+cp rootfs.tar.gz /mnt/share/zybo_boot_files/
 ```
 
 ---
