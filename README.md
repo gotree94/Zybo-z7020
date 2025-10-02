@@ -635,6 +635,21 @@ Filesystem Packages  --->
 
 ---
 ### 4.7 Root 로그인 설정 (중요!)
+Filesystem Packages   --->
+  Image Features  --->
+  [*] ssh-server-dropbear
+  [ ] ssh-server-openssh
+  [*] hwcodecs
+  [ ] package-management
+  [ ] debug-tweaks
+  [*] auto-login
+      Init-manager (sysvinit)  --->     
+
+
+
+---
+아래 부분 문제 있음.
+### 4.7 Root 로그인 설정 (중요!)
 
 **기본 상태의 문제:**
 ```
