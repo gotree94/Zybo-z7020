@@ -635,6 +635,8 @@ Filesystem Packages  --->
 
 ---
 ### 4.7 Root 로그인 설정 (중요!)
+
+```
 Filesystem Packages   --->
   Image Features  --->
   [*] ssh-server-dropbear
@@ -644,79 +646,8 @@ Filesystem Packages   --->
   [ ] debug-tweaks
   [*] auto-login
       Init-manager (sysvinit)  --->     
-
-
-
----
-아래 부분 문제 있음.
-### 4.7 Root 로그인 설정 (중요!)
-
-**기본 상태의 문제:**
-```
-myproject login: root
-Password: (무엇을 입력해도)
-Login incorrect
 ```
 
-**원인:**
-- PetaLinux는 보안상 빈 패스워드 로그인 차단
-- 하지만 root 패스워드가 설정되지 않음
-- 결과: 로그인 불가능
-
-#### 4.7.1 해결 방법 - Rootfs 설정 (필수!)
-
-```bash
-cd ~/projects/myproject
-petalinux-config -c rootfs
-```
-
-**⭐ 반드시 다음 항목들을 활성화:**
-
-```
-Image Features --->
-    [*] debug-tweaks                  ← 필수!
-    [*] allow-empty-password          ← 필수!
-    [*] allow-root-login              ← 필수!
-    [*] empty-root-password           ← 필수!
-    [*] serial-autologin-root         ← 권장 (자동 로그인)
-```
-
-**추가 패키지 (선택사항):**
-
-```
-Filesystem Packages --->
-    admin --->
-        [*] sudo
-    console/utils --->
-        [*] vim
-        [*] nano
-    network --->
-        [*] openssh
-        [*] openssh-sshd
-```
-
-저장: `Save` → `Exit`
-
-#### 4.7.2 설정 확인
-
-```bash
-# 설정이 제대로 되었는지 확인
-cat ~/projects/myproject/project-spec/configs/rootfs_config | grep -i "debug\|empty\|autologin"
-
-# 다음 항목들이 있어야 함:
-# CONFIG_debug-tweak
-```
-
-메뉴 이동
-
-Root Filesystem Settings → Image Features 로 들어가서
-package-management 체크 (패키지 설치 필요 시).
-
-다시 Root Filesystem Settings → "Root Password" 항목 선택.
-
-비밀번호 입력
-
-원하는 root 비밀번호를 입력하고 저장합니다.
 
 
 ## 5. PetaLinux 빌드
@@ -1818,3 +1749,76 @@ EXTRA_IMAGE_FEATURES += "allow-empty-password"
 ```
 
 ---
+
+
+---
+아래 부분 문제 있음.
+### 4.7 Root 로그인 설정 (중요!)
+
+**기본 상태의 문제:**
+```
+myproject login: root
+Password: (무엇을 입력해도)
+Login incorrect
+```
+
+**원인:**
+- PetaLinux는 보안상 빈 패스워드 로그인 차단
+- 하지만 root 패스워드가 설정되지 않음
+- 결과: 로그인 불가능
+
+#### 4.7.1 해결 방법 - Rootfs 설정 (필수!)
+
+```bash
+cd ~/projects/myproject
+petalinux-config -c rootfs
+```
+
+**⭐ 반드시 다음 항목들을 활성화:**
+
+```
+Image Features --->
+    [*] debug-tweaks                  ← 필수!
+    [*] allow-empty-password          ← 필수!
+    [*] allow-root-login              ← 필수!
+    [*] empty-root-password           ← 필수!
+    [*] serial-autologin-root         ← 권장 (자동 로그인)
+```
+
+**추가 패키지 (선택사항):**
+
+```
+Filesystem Packages --->
+    admin --->
+        [*] sudo
+    console/utils --->
+        [*] vim
+        [*] nano
+    network --->
+        [*] openssh
+        [*] openssh-sshd
+```
+
+저장: `Save` → `Exit`
+
+#### 4.7.2 설정 확인
+
+```bash
+# 설정이 제대로 되었는지 확인
+cat ~/projects/myproject/project-spec/configs/rootfs_config | grep -i "debug\|empty\|autologin"
+
+# 다음 항목들이 있어야 함:
+# CONFIG_debug-tweak
+```
+
+메뉴 이동
+
+Root Filesystem Settings → Image Features 로 들어가서
+package-management 체크 (패키지 설치 필요 시).
+
+다시 Root Filesystem Settings → "Root Password" 항목 선택.
+
+비밀번호 입력
+
+원하는 root 비밀번호를 입력하고 저장합니다.
+
