@@ -102,6 +102,9 @@ sudo usermod -aG vboxsf gotree94
 # 재부팅
 sudo reboot
 
+# 재로그인 후 확인
+groups
+
 # 공유 폴더 확인
 ls -la /mnt/share
 ```
