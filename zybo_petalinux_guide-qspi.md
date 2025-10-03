@@ -42,6 +42,20 @@ petalinux-package --boot \
 
 ### 5.3 Flash 이미지 생성
 
+**QSPI에서 U-Boot까지만(권장: 커널은 SD)**
+
+```
+petalinux-package --boot \
+  --fsbl images/linux/zynq_fsbl.elf \
+  --fpga images/linux/design_1_wrapper.bit \
+  --u-boot images/linux/u-boot.elf \
+  --format MCS \
+  --force
+```
+
+**QSPI에서 커널까지 넣고 부팅(선택)**
+  - 오프셋/환경에 따라 변하니, 기본은 위 방식(커널은 SD) 추천입니다. 그래도 올리고 싶으면:
+
 ``` bash
 petalinux-package --boot \
   --fsbl images/linux/zynq_fsbl.elf \
