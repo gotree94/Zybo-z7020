@@ -44,10 +44,14 @@ petalinux-package --boot \
 
 ``` bash
 petalinux-package --boot \
-    --fsbl images/linux/zynq_fsbl.elf \
-    --fpga images/linux/design_1_wrapper.bit \
-    --u-boot images/linux/u-boot.elf \
-    --flash --force
+  --fsbl images/linux/zynq_fsbl.elf \
+  --fpga images/linux/design_1_wrapper.bit \
+  --u-boot images/linux/u-boot.elf \
+  --dtb images/linux/system.dtb \
+  --kernel images/linux/image.ub \
+  --offset 0xF40000 \
+  --format MCS \
+  --force
 ```
 
 👉 Quad-SPI Flash 용 MCS 파일 생성됨:\
