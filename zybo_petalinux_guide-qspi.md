@@ -31,7 +31,12 @@ petalinux-build
 ### 5.2 부트 이미지 생성 (Quad-SPI Flash 용)
 
 ``` bash
-petalinux-package --boot     --fsbl images/linux/zynq_fsbl.elf     --fpga images/linux/design_1_wrapper.bit     --u-boot images/linux/u-boot.elf     --pmufw images/linux/pmufw.elf     --force
+petalinux-package --boot
+--fsbl images/linux/zynq_fsbl.elf
+--fpga images/linux/design_1_wrapper.bit
+--u-boot images/linux/u-boot.elf
+--pmufw images/linux/pmufw.elf
+--force
 ```
 
 👉 생성: `images/linux/BOOT.BIN`
@@ -39,7 +44,11 @@ petalinux-package --boot     --fsbl images/linux/zynq_fsbl.elf     --fpga images
 ### 5.3 Flash 이미지 생성
 
 ``` bash
-petalinux-package --boot --fsbl images/linux/zynq_fsbl.elf     --fpga images/linux/design_1_wrapper.bit     --u-boot images/linux/u-boot.elf     --flash --force
+petalinux-package --boot
+--fsbl images/linux/zynq_fsbl.elf
+--fpga images/linux/design_1_wrapper.bit
+--u-boot images/linux/u-boot.elf
+--flash --force
 ```
 
 👉 Quad-SPI Flash 용 MCS 파일 생성됨:\
