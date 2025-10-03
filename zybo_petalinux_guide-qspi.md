@@ -35,7 +35,6 @@ petalinux-package --boot \
     --fsbl images/linux/zynq_fsbl.elf \
     --fpga images/linux/design_1_wrapper.bit \
     --u-boot images/linux/u-boot.elf \
-    --pmufw images/linux/pmufw.elf \
     --force
 ```
 
