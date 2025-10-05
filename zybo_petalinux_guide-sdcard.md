@@ -2,6 +2,15 @@
 
 ## 2. Ubuntu 시스템 준비
 
+### 2.0 VirtualBox 공유퐁더 ###
+
+```
+sudo mkdir -p /mnt/share
+sudo usermod -aG vboxsf $USER
+
+echo "설치 완료! 재부팅하세요: sudo reboot"
+```
+
 ### 2.1 시스템 업데이트
 
 ``` bash
@@ -19,13 +28,24 @@ sudo apt update
 ### 2.3 필수 패키지 설치
 
 ``` bash
-sudo apt install -y     build-essential     gcc-multilib     g++-multilib     gawk     wget     git     diffstat     unzip     texinfo     chrpath     socat     cpio     python3     python3-pip     python3-pexpect     xz-utils     debianutils     iputils-ping     python3-git     python3-jinja2     libegl1-mesa     libsdl1.2-dev     pylint     xterm     rsync     curl     libncurses5-dev     libncursesw5-dev     libssl-dev     flex     bison     libselinux1     gnupg     zlib1g-dev     libtool     autoconf     automake     net-tools     screen     pax     gzip     vim     iproute2     locales     libncurses5     libtinfo5
+# PetaLinux 필수 패키지
+sudo apt install -y \
+    build-essential gcc-multilib g++-multilib gawk wget git \
+    diffstat unzip texinfo chrpath socat cpio python3 \
+    python3-pip python3-pexpect xz-utils debianutils \
+    iputils-ping python3-git python3-jinja2 libegl1-mesa \
+    libsdl1.2-dev pylint xterm rsync curl \
+    libncurses5-dev libncursesw5-dev libssl-dev \
+    flex bison libselinux1 gnupg zlib1g-dev \
+    libtool autoconf automake net-tools screen pax gzip vim \
+    iproute2 locales libncurses5 libtinfo5
 ```
 
 ### 2.4 32비트 라이브러리 설치
 
 ``` bash
-sudo apt install -y     libncurses5:i386     libc6:i386     libstdc++6:i386     lib32z1     zlib1g:i386
+sudo apt install -y \
+    libncurses5:i386 libc6:i386 libstdc++6:i386 lib32z1 zlib1g:i386
 ```
 
 ### 2.5 Locale 설정
